@@ -13,22 +13,18 @@ class Company(Base):
     description = Column(String, index=True)
     admin_id = Column(Integer, ForeignKey("admins.id"))
 
-    # employees = relationship("Employee", back_populates="company")
+    employees = relationship("Employee", back_populates="company")
     # clients = relationship("Client", back_populates="company")
     admin = relationship("Admin", back_populates="company")
 
 
-# class Employee(Base):
-#     __tablename__ = "employees"
+class Employee(Base):
+    __tablename__ = "employees"
     
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String, unique=True, index=True)
-#     address = Column(String, unique=True, index=True)
-#     phone_number = Column(String, unique=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     company_id = Column(Integer, ForeignKey=("companies.id"))
-
-#     company = relationship("Company", back_populates="employees")
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String, unique=True, index=True)
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    company = relationship("Company", back_populates="employees")
 
 
 # class Client(Base):

@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.post('/api/companies/', response_model=schemas.CompanyOut)
+@router.post('/api/{admin_id}/companies/', response_model=schemas.CompanyOut)
 def create_company(
     admin_id: int,
     company: schemas.CompanyIn,

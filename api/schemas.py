@@ -35,17 +35,17 @@ class AdminOut(AdminIn):
 
 
 # # Employee Model Classes
-# class EmployeeIn(BaseModel):
-#     name: str
-#     email: str
+class EmployeeIn(BaseModel):
+    full_name: str
+    company_id: int
 
 
-# class EmployeeOut(EmployeeIn):
-#     id: int
-#     company_id: int
 
-#     class Config:
-#         from_attribute = True
+class EmployeeOut(EmployeeIn):
+    id: int
+
+    class Config:
+        from_attribute = True
 
 
 # Service Model Classes
@@ -68,7 +68,7 @@ class CompanyOut(CompanyIn):
     admin_id: int
     # admins: list[AdminOut] = []
     # clients: list[ClientOut] = []
-    # employees: list[EmployeeOut] = []
+    employees: list[EmployeeOut] = []
     # appointments: list[AppointmentOut] = []
     # sales: list[SaleOut] = []
 
