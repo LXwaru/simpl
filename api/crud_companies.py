@@ -5,11 +5,16 @@ from . import models, schemas
 
 def create_company(
         db: Session,
-        company: schemas.CompanyIn,
-        admin_id: int
+        company: schemas.CompanyIn
 ):
-    db_company = models.Company(**company.model_dump(), admin_id=admin_id)
+    db_company = models.Company(**company.model_dump())
     db.add(db_company)
     db.commit()
     db.refresh(db_company)
     return db_company
+
+
+def list_companies(
+        db: Session
+):
+    return db.query(models.Company).all()

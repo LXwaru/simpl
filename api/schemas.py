@@ -61,11 +61,11 @@ class EmployeeOut(EmployeeIn):
 class CompanyIn(BaseModel):
     name: str
     description: Union[str, None] = None
+    admin_id: int
 
 
 class CompanyOut(CompanyIn):
     id: int
-    admin_id: int
     # admins: list[AdminOut] = []
     # clients: list[ClientOut] = []
     employees: list[EmployeeOut] = []

@@ -5,7 +5,7 @@ from . import models, schemas
 
 
 def get_employee_by_name_and_company(db: Session, full_name: str, company_id: int):
-    return db.query(models.Employee).filter(models.Employee.full_name == full_name and models.Employee.company_id == company_id).first()
+    return db.query(models.Employee).filter(models.Employee.full_name == full_name or models.Employee.company_id == company_id).first()
 
 
 def create_employee(db: Session, employee: schemas.EmployeeIn):
