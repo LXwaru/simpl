@@ -13,8 +13,8 @@ class Company(Base):
     description = Column(String, index=True)
     admin_id = Column(Integer, ForeignKey("admins.id"))
 
-    employees = relationship("Employee", back_populates="company")
-    # clients = relationship("Client", back_populates="company")
+    employees = relationship("Employee", back_populates="company", cascade='all, delete')
+    clients = relationship("Client", back_populates="company", cascade='all, delete')
     admin = relationship("Admin", back_populates="company")
 
 
@@ -23,19 +23,20 @@ class Employee(Base):
     
     id = Column(Integer, primary_key=True)
     full_name = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    is_active = Column(Boolean, default=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="employees")
 
 
-# class Client(Base):
-#     __tablename__ = "clients"
+class Client(Base):
+    __tablename__ = "clients"
     
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String, unique=True, index=True)
-#     email = Column(String, unique=True, index=True)
-#     company_id = Column(Integer, ForeignKey=("companies.id"))
-
-#     company = relationship("Company", back_populates="clients")
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    company = relationship("Company", back_populates="clients")
 
 
 class Admin(Base):

@@ -20,29 +20,31 @@ class AdminOut(AdminIn):
         from_attributes = True
 
 
-# # Client Model Classes
-# class ClientIn(BaseModel):
-#     name: str
-#     email: str
+# Client Model Classes
+class ClientIn(BaseModel):
+    full_name: str
+    email: str
 
 
-# class ClientOut(ClientIn):
-#     id: int
-#     company_id: int
+class ClientOut(ClientIn):
+    id: int
+    company_id: int
 
-#     class Config:
-#         from_attributes = True
+    class Config:
+        from_attributes = True
 
 
 # # Employee Model Classes
 class EmployeeIn(BaseModel):
     full_name: str
-    company_id: int
+    email: str
 
 
 
 class EmployeeOut(EmployeeIn):
     id: int
+    company_id: int
+    is_active: bool
 
     class Config:
         from_attribute = True
@@ -61,13 +63,12 @@ class EmployeeOut(EmployeeIn):
 class CompanyIn(BaseModel):
     name: str
     description: Union[str, None] = None
-    admin_id: int
 
 
 class CompanyOut(CompanyIn):
     id: int
-    # admins: list[AdminOut] = []
-    # clients: list[ClientOut] = []
+    admin_id: int
+    clients: list[ClientOut] = []
     employees: list[EmployeeOut] = []
     # appointments: list[AppointmentOut] = []
     # sales: list[SaleOut] = []
