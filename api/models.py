@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
 from datetime import datetime, timezone
@@ -13,9 +13,10 @@ class Company(Base):
     description = Column(String, index=True)
     admin_id = Column(Integer, ForeignKey("admins.id"))
 
+    admin = relationship("Admin", back_populates="company")
     employees = relationship("Employee", back_populates="company", cascade='all, delete')
     clients = relationship("Client", back_populates="company", cascade='all, delete')
-    admin = relationship("Admin", back_populates="company")
+    services = relationship("Service", back_populates="company", cascade="all, delete")
 
 
 class Employee(Base):
@@ -33,7 +34,7 @@ class Client(Base):
     __tablename__ = "clients"
     
     id = Column(Integer, primary_key=True)
-    full_name = Column(String, unique=True, index=True)
+    full_name = Column(String, index=True)
     email = Column(String, unique=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="clients")
@@ -49,6 +50,29 @@ class Admin(Base):
     is_active = Column(Boolean, default=True)
 
     company = relationship("Company", back_populates='admin', uselist=False)
+
+
+class Service(Base):
+    __tablename__ = "services"
+    id = Column(Integer, primary_key=True)
+    title = Column(String, unique=True, index=True)
+    price = Column(Numeric, index=True)
+    description = Column(String, index=True)
+    duration = Column(Interval)
+    is_enabled = Column(Boolean, default=True)
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    company = relationship("Company", back_populates="services")
+
+
+class Appointment(Base):
+    __tablename__ = "appointments"
+
+    id = Column(Integer, primary_key=True)
+    service_id = Column(Integer, ForeignKey('services.id'))
+    client_id = Column(Integer, ForeignKey('clients.id'))
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    start_time = Column(DateTime, index=True)
+    is_confirmed = Column(Boolean, default=False)
 
 
 class HttpError(BaseModel):

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from . import models, crud_admins, utils_db
+from . import models, utils_db
+from .crud import crud_admins
 from typing import Annotated
 import jwt
 from fastapi import Depends, HTTPException, status

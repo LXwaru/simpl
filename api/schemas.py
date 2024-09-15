@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Union, List, Optional
 
 
@@ -51,6 +51,20 @@ class EmployeeOut(EmployeeIn):
 
 
 # Service Model Classes
+class ServiceIn(BaseModel):
+    title: str
+    price: int
+    duration: timedelta
+    description: str
+
+
+class ServiceOut(ServiceIn):
+    id: int
+    company_id: int
+    is_enabled: bool
+
+    class Config:
+        from_attributes = True
 
 
 # Appointment Model Classes

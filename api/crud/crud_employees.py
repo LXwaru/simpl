@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
 
-from . import models, schemas
+from .. import models, schemas
 
 
 def get_employee_by_email(db: Session, email: str):

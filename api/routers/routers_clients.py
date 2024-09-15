@@ -6,7 +6,8 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from . import schemas, crud_clients, utils_db
+from .. import schemas, utils_db
+from ..crud import crud_clients
 from sqlalchemy.orm import Session
 
 

@@ -9,7 +9,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from . import models, utils_sec, utils_db, schemas
+from .. import models, utils_sec, utils_db, schemas
 from sqlalchemy.orm import Session
 
 router = APIRouter()
