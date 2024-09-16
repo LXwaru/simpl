@@ -17,6 +17,8 @@ class Company(Base):
     employees = relationship("Employee", back_populates="company", cascade='all, delete')
     clients = relationship("Client", back_populates="company", cascade='all, delete')
     services = relationship("Service", back_populates="company", cascade="all, delete")
+    sales = relationship("Sale", back_populates='company', cascade='all, delete')
+    appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
 
 
 class Employee(Base):
@@ -38,6 +40,7 @@ class Client(Base):
     email = Column(String, unique=True, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="clients")
+    credits = relationship("Sale", back_populates="client")
 
 
 class Admin(Base):
@@ -54,6 +57,7 @@ class Admin(Base):
 
 class Service(Base):
     __tablename__ = "services"
+
     id = Column(Integer, primary_key=True)
     title = Column(String, unique=True, index=True)
     price = Column(Numeric, index=True)
@@ -64,14 +68,30 @@ class Service(Base):
     company = relationship("Company", back_populates="services")
 
 
+class Sale(Base):
+    __tablename__= "sales"
+    
+    id = Column(Integer, primary_key=True)
+    company_id = Column(Integer, ForeignKey('companies.id'))
+    date = Column(DateTime, index=True)
+    client_id = Column(Integer, ForeignKey("clients.id"))
+    total_due = Column(Numeric, index=True)
+
+    services = relationship('Service', back_populates='sale')
+    client = relationship('Client', back_populates='credits')
+    
+
+
 class Appointment(Base):
     __tablename__ = "appointments"
 
     id = Column(Integer, primary_key=True)
+    company_id = Column(Integer, ForeignKey('companies.id'))
     service_id = Column(Integer, ForeignKey('services.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
     employee_id = Column(Integer, ForeignKey('employees.id'))
     start_time = Column(DateTime, index=True)
+    location = Column(String, index=True)
     is_confirmed = Column(Boolean, default=False)
 
 

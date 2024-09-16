@@ -68,10 +68,23 @@ class ServiceOut(ServiceIn):
 
 
 # Appointment Model Classes
+# class AppointmentIn
 
 
 # Sale Model Classes
+class SaleIn(BaseModel):
+    date: datetime
+    client_id: int
+    services: list[ServiceOut]
 
+
+class SaleOut(SaleIn):
+    id: int
+    company_id: int
+    total_due: int
+
+    class Config:
+        from_attributes = True
 
 # Company Model Classes
 class CompanyIn(BaseModel):
@@ -85,7 +98,7 @@ class CompanyOut(CompanyIn):
     clients: list[ClientOut] = []
     employees: list[EmployeeOut] = []
     # appointments: list[AppointmentOut] = []
-    # sales: list[SaleOut] = []
+    sales: list[SaleOut] = []
 
 
     class Config:
