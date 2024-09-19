@@ -1,8 +1,20 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval, func, Table
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
 from datetime import datetime, timezone
 from .database import Base
+import pytz
+
+
+def utc_now():
+    return datetime.now(pytz.utc)
+
+
+sale_service_association = Table(
+    'sale_service', Base.metadata,
+    Column('sale_id', Integer, ForeignKey('sales.id')),
+    Column('service_id', Integer, ForeignKey('services.id'))
+)
 
 
 class Company(Base):
@@ -18,7 +30,7 @@ class Company(Base):
     clients = relationship("Client", back_populates="company", cascade='all, delete')
     services = relationship("Service", back_populates="company", cascade="all, delete")
     sales = relationship("Sale", back_populates='company', cascade='all, delete')
-    appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
+    # appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
 
 
 class Employee(Base):
@@ -66,33 +78,37 @@ class Service(Base):
     is_enabled = Column(Boolean, default=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="services")
-
+    sales = relationship("Sale", secondary=sale_service_association, back_populates="services")
 
 class Sale(Base):
     __tablename__= "sales"
     
     id = Column(Integer, primary_key=True)
     company_id = Column(Integer, ForeignKey('companies.id'))
-    date = Column(DateTime, index=True)
+    date = Column(TIMESTAMP(timezone=True), default=utc_now)
     client_id = Column(Integer, ForeignKey("clients.id"))
     total_due = Column(Numeric, index=True)
+    is_paid = Column(Boolean, default=False)
 
-    services = relationship('Service', back_populates='sale')
-    client = relationship('Client', back_populates='credits')
+    services = relationship('Service', secondary=sale_service_association, back_populates="sales")
+    company = relationship("Company", back_populates="sales")
+    client = relationship("Client", back_populates="credits")
     
 
 
-class Appointment(Base):
-    __tablename__ = "appointments"
+# class Appointment(Base):
+#     __tablename__ = "appointments"
 
-    id = Column(Integer, primary_key=True)
-    company_id = Column(Integer, ForeignKey('companies.id'))
-    service_id = Column(Integer, ForeignKey('services.id'))
-    client_id = Column(Integer, ForeignKey('clients.id'))
-    employee_id = Column(Integer, ForeignKey('employees.id'))
-    start_time = Column(DateTime, index=True)
-    location = Column(String, index=True)
-    is_confirmed = Column(Boolean, default=False)
+#     id = Column(Integer, primary_key=True)
+#     company_id = Column(Integer, ForeignKey('companies.id'))
+#     service_id = Column(Integer, ForeignKey('services.id'))
+#     client_id = Column(Integer, ForeignKey('clients.id'))
+#     employee_id = Column(Integer, ForeignKey('employees.id'))
+#     start_time = Column(DateTime, index=True)
+#     location = Column(String, index=True)
+#     is_confirmed = Column(Boolean, default=False)
+
+#     company = relationship("Company", back_populates="appointments")
 
 
 class HttpError(BaseModel):

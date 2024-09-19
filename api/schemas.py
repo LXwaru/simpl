@@ -75,13 +75,17 @@ class ServiceOut(ServiceIn):
 class SaleIn(BaseModel):
     date: datetime
     client_id: int
-    services: list[ServiceOut]
+    service_ids: List[int]
 
 
-class SaleOut(SaleIn):
+class SaleOut(BaseModel):
     id: int
     company_id: int
+    date: datetime
+    client_id: int
+    services: List[ServiceOut]
     total_due: int
+    is_paid: bool
 
     class Config:
         from_attributes = True

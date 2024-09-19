@@ -14,9 +14,17 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.post('/api/{company_id}/sales/')
-def create_new_sale():
-    pass
+@router.post('/api/{company_id}/sales/', response_model=schemas.SaleOut)
+def create_new_sale(
+    company_id: int,
+    sale: schemas.SaleIn,
+    db: Session = Depends(utils_db.get_db)
+):
+    return crud_sales.create_sale(
+        db=db,
+        company_id=company_id,
+        sale=sale
+    )
 
 
 @router.get('/api/{company_id}/sales/')
