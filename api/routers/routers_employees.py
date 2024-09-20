@@ -22,5 +22,5 @@ def create_employee(
 ):
     db_employee = crud_employees.get_employee_by_email(db, email=employee.email)
     if db_employee:
-        raise HTTPException(status_code=400, detail="employee name already registered")
+        raise HTTPException(status_code=400, detail="employee email already registered")
     return crud_employees.create_employee(db=db, employee=employee, company_id=company_id)
