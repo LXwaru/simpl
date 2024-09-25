@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval, func, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import List
 from pydantic import BaseModel
 from datetime import datetime, timezone
 from .database import Base
@@ -10,11 +11,17 @@ def utc_now():
     return datetime.now(pytz.utc)
 
 
-sale_service_association = Table(
-    'sale_service', Base.metadata,
-    Column('sale_id', Integer, ForeignKey('sales.id')),
-    Column('service_id', Integer, ForeignKey('services.id'))
-)
+# sale_service_association = Table(
+#     'sale_service', Base.metadata,
+#     Column('sale_id', Integer, ForeignKey('sales.id')),
+#     Column('sale_item_id', Integer, ForeignKey('sale_items.id'))
+# )
+
+# class SaleServiceAssociation(Base):
+#     __tablename__ = 'sale_service_association'
+#     sale_id: Mapped[int] = mapped_column(ForeignKey('sales.id'), primary_key=True)
+#     sale_item_id: Mapped[int] = mapped_column(ForeignKey('sale_items.id'))
+#     sale_item: Mapped['SaleItem'] = relationship()
 
 
 class Company(Base):
@@ -78,7 +85,22 @@ class Service(Base):
     is_enabled = Column(Boolean, default=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="services")
-    sales = relationship("Sale", secondary=sale_service_association, back_populates="services")
+    service_items = relationship("ServiceItem", back_populates="service")
+
+
+class ServiceItem(Base):
+    __tablename__ = "service_items"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    service_id = Column(Integer, ForeignKey('services.id'))
+    service_title = Column(String, index=True)
+    price = Column(Integer, index=True)
+    sale_id = Column(Integer, ForeignKey('sales.id'))
+    sales = relationship('Sale', back_populates='service_items')
+
+    service = relationship("Service", back_populates='service_items')
+
+
 
 class Sale(Base):
     __tablename__= "sales"
@@ -87,10 +109,11 @@ class Sale(Base):
     company_id = Column(Integer, ForeignKey('companies.id'))
     date = Column(TIMESTAMP(timezone=True), default=utc_now)
     client_id = Column(Integer, ForeignKey("clients.id"))
+    client_name = Column(String, index=True)
     total_due = Column(Numeric, index=True)
     is_paid = Column(Boolean, default=False)
+    service_items: Mapped[List["ServiceItem"]] = relationship(back_populates='sales')
 
-    services = relationship('Service', secondary=sale_service_association, back_populates="sales")
     company = relationship("Company", back_populates="sales")
     client = relationship("Client", back_populates="credits")
     

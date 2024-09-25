@@ -40,7 +40,6 @@ class EmployeeIn(BaseModel):
     email: str
 
 
-
 class EmployeeOut(EmployeeIn):
     id: int
     company_id: int
@@ -68,12 +67,23 @@ class ServiceOut(ServiceIn):
 
 
 # Appointment Model Classes
-# class AppointmentIn
+
+# SaleItem model Classes
+class SaleItemIn(BaseModel):
+    service_id: int
+
+
+class SaleItemOut(SaleItemIn):
+    id: int
+    service_title: str
+    price: int
+
+    class Config:
+        from_attributes = True
 
 
 # Sale Model Classes
 class SaleIn(BaseModel):
-    date: datetime
     client_id: int
     service_ids: List[int]
 
@@ -83,9 +93,9 @@ class SaleOut(BaseModel):
     company_id: int
     date: datetime
     client_id: int
-    services: List[ServiceOut]
     total_due: int
     is_paid: bool
+    service_items: List[SaleItemOut]
 
     class Config:
         from_attributes = True
