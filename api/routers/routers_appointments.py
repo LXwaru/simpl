@@ -15,8 +15,13 @@ router = APIRouter()
 
 
 @router.post('/api/{company_id}/appointments/')
-def create_new_appointment():
-    pass
+def create_new_appointment(
+    company_id: int,
+    appointment: schemas.AppointmentIn,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.create_new_appointment(db=db, appointment=appointment, company_id=company_id)
+    return appointment
 
 
 @router.get('/api/{company_id}/appointments/')

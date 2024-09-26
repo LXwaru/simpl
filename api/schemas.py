@@ -20,33 +20,23 @@ class AdminOut(AdminIn):
         from_attributes = True
 
 
-# Client Model Classes
-class ClientIn(BaseModel):
-    full_name: str
-    email: str
+# Appointment Model Classes
+class AppointmentIn(BaseModel):
+    client_id: int
+    service_id: int
+    employee_id: int
+    start_time: datetime
 
 
-class ClientOut(ClientIn):
+class AppointmentOut(AppointmentIn):
     id: int
     company_id: int
+    is_confirmed: bool
+    is_paid: bool
+    is_complete: bool
 
     class Config:
-        from_attributes = True
-
-
-# # Employee Model Classes
-class EmployeeIn(BaseModel):
-    full_name: str
-    email: str
-
-
-class EmployeeOut(EmployeeIn):
-    id: int
-    company_id: int
-    is_active: bool
-
-    class Config:
-        from_attribute = True
+        from_attributes=True
 
 
 # Service Model Classes
@@ -65,8 +55,6 @@ class ServiceOut(ServiceIn):
     class Config:
         from_attributes = True
 
-
-# Appointment Model Classes
 
 # SaleItem model Classes
 class SaleItemIn(BaseModel):
@@ -100,6 +88,38 @@ class SaleOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+# Client Model Classes
+class ClientIn(BaseModel):
+    full_name: str
+    email: str
+
+
+class ClientOut(ClientIn):
+    id: int
+    company_id: int
+    credits: list[SaleItemOut] = []
+    appointments: list[AppointmentOut] = []
+
+    class Config:
+        from_attributes = True
+
+
+# # Employee Model Classes
+class EmployeeIn(BaseModel):
+    full_name: str
+    email: str
+
+
+class EmployeeOut(EmployeeIn):
+    id: int
+    company_id: int
+    is_active: bool
+
+    class Config:
+        from_attribute = True
+
+
 # Company Model Classes
 class CompanyIn(BaseModel):
     name: str
@@ -109,9 +129,10 @@ class CompanyIn(BaseModel):
 class CompanyOut(CompanyIn):
     id: int
     admin_id: int
+    appointments: list[AppointmentOut] = []
     clients: list[ClientOut] = []
     employees: list[EmployeeOut] = []
-    # appointments: list[AppointmentOut] = []
+    services: list[ServiceOut] = []
     sales: list[SaleOut] = []
 
 

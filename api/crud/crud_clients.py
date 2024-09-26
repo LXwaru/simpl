@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import NoResultFound
-
+from fastapi import HTTPException
 from .. import models, schemas
 
 
@@ -21,3 +21,11 @@ def create_client(
     db.commit()
     db.refresh(db_client)
     return db_client
+
+
+def get_clients_by_company_id(
+        db: Session,
+        company_id: int
+):
+    client_list = db.query(models.Client).filter(models.Client.company_id == company_id)
+    return client_list

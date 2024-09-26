@@ -37,7 +37,7 @@ class Company(Base):
     clients = relationship("Client", back_populates="company", cascade='all, delete')
     services = relationship("Service", back_populates="company", cascade="all, delete")
     sales = relationship("Sale", back_populates='company', cascade='all, delete')
-    # appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
+    appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
 
 
 class Employee(Base):
@@ -119,19 +119,20 @@ class Sale(Base):
     
 
 
-# class Appointment(Base):
-#     __tablename__ = "appointments"
+class Appointment(Base):
+    __tablename__ = "appointments"
 
-#     id = Column(Integer, primary_key=True)
-#     company_id = Column(Integer, ForeignKey('companies.id'))
-#     service_id = Column(Integer, ForeignKey('services.id'))
-#     client_id = Column(Integer, ForeignKey('clients.id'))
-#     employee_id = Column(Integer, ForeignKey('employees.id'))
-#     start_time = Column(DateTime, index=True)
-#     location = Column(String, index=True)
-#     is_confirmed = Column(Boolean, default=False)
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, ForeignKey('clients.id'))
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    service_id = Column(Integer, ForeignKey('services.id'))
+    start_time = Column(DateTime, index=True)
+    is_confirmed = Column(Boolean, default=False)
+    is_paid = Column(Boolean, default=False)
+    is_complete = Column(Boolean, default=False)
 
-#     company = relationship("Company", back_populates="appointments")
+    company_id = Column(Integer, ForeignKey('companies.id'))
+    company = relationship("Company", back_populates="appointments")
 
 
 class HttpError(BaseModel):
