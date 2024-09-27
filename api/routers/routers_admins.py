@@ -31,5 +31,28 @@ def list_admins(
     limit: int = 100, 
     db: Session = Depends(utils_db.get_db)
 ):
-    admins = crud_admins.get_admins(db, skip=skip, limit=limit)
-    return admins
+    return crud_admins.get_admins(db, skip=skip, limit=limit)
+
+
+@router.get("/api/admin/{admin_id}/", response_model=schemas.AdminOut)
+def get_admin_by_id(
+    admin_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    return crud_admins.get_admin(db, admin_id=admin_id)
+
+
+@router.put("/api/admin/{admin_id}/", response_model=schemas.AdminOut)
+def toggle_activation_status_admin(
+    admin_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    return crud_admins.toggle_activation_status_admin(db=db, admin_id=admin_id)
+
+
+@router.delete("/api/admin/{admin_id}/")
+def delete_admin(
+    admin_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    return crud_admins.delete_admin(db=db, admin_id=admin_id)

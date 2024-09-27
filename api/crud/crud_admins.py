@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from .. import models, schemas, utils_sec
+from sqlalchemy.exc import NoResultFound
 
 
 def get_admin(db: Session, admin_id: int):
@@ -32,3 +33,33 @@ def create_admin(
     db.refresh(db_admin)
     return db_admin
 
+
+def toggle_activation_status_admin(
+        db: Session,
+        admin_id: int,
+):
+    try:
+        admin = db.query(models.Admin).filter(models.Admin.id == admin_id).one()
+        if admin.is_active:
+            admin.is_active = False
+        else:
+            admin.is_active = True
+        db.commit()
+        db.refresh(admin)
+        return admin
+    except NoResultFound:
+        db.rollback()
+        return {'detail': 'no admin with that id'}
+    
+
+def delete_admin(
+        db: Session,
+        admin_id: int
+):
+    try:
+        admin = db.query(models.Admin).filter(models.Admin.id == admin_id).one()
+        db.delete(admin)
+        db.commit()
+        return {'detail': "Admin deleted"}
+    except NoResultFound:
+        return {'detail': 'admin not found'}
