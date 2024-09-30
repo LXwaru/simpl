@@ -40,3 +40,20 @@ def edit_info(
         db.commit()
         db.refresh(db_company)
         return db_company
+
+
+def delete_company(
+        db: Session,
+        admin_id: int,
+        company_id: int
+):
+        try:
+                company = db.query(models.Company).filter(models.Company.id == company_id).one()
+                if company.admin_id == admin_id:
+                        db.delete(company)
+                        db.commit()
+                        return {'detail': "company deleted successfully"}
+                else:
+                        return {'detail': "permission denied"}
+        except NoResultFound:
+                return {'detail': "company not found"} 

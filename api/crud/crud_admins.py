@@ -52,7 +52,8 @@ def toggle_activation_status_admin(
 
 def delete_admin(
         db: Session,
-        admin_id: int
+        admin_id: int,
+        company_id: int
 ):
     try:
         admin = db.query(models.Admin).filter(models.Admin.id == admin_id).one()

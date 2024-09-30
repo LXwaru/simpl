@@ -46,3 +46,12 @@ def edit_info(
     db: Session = Depends(utils_db.get_db)
 ):
     return crud_companies.edit_info(db=db, admin_id=admin_id, company=company)
+
+
+@router.delete('/api/company/{company_id}/')
+def delete_company(
+    admin_id: int,
+    company_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    return crud_companies.delete_company(db=db, admin_id=admin_id, company_id=company_id)
