@@ -16,10 +16,8 @@ def get_admin_by_username(
 
 def get_admins(
         db: Session, 
-        skip: int = 0, 
-        limit: int = 10
 ):
-    return db.query(models.Admin).offset(skip).limit(limit).all()
+    return db.query(models.Admin).all()
 
 
 def create_admin(

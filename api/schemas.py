@@ -3,22 +3,6 @@ from datetime import datetime, timedelta
 from typing import Union, List, Optional
 
 
-# Admin Model Classes
-class AdminIn(BaseModel):
-    username: str
-
-
-class AdminCreate(AdminIn):
-    password: str
-
-
-class AdminOut(AdminIn):
-    id: int
-    is_active: bool
-
-    class Config:
-        from_attributes = True
-
 
 # Appointment Model Classes
 class AppointmentIn(BaseModel):
@@ -135,6 +119,24 @@ class CompanyOut(CompanyIn):
     services: list[ServiceOut] = []
     sales: list[SaleOut] = []
 
+
+    class Config:
+        from_attributes = True
+
+
+        # Admin Model Classes
+class AdminIn(BaseModel):
+    username: str
+
+
+class AdminCreate(AdminIn):
+    password: str
+
+
+class AdminOut(AdminIn):
+    id: int
+    is_active: bool
+    company: Optional[CompanyOut]
 
     class Config:
         from_attributes = True

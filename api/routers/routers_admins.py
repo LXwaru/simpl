@@ -27,11 +27,9 @@ def create_admin(
 
 @router.get("/api/admins/", response_model=list[schemas.AdminOut])
 def list_admins(
-    skip: int = 0, 
-    limit: int = 100, 
     db: Session = Depends(utils_db.get_db)
 ):
-    return crud_admins.get_admins(db, skip=skip, limit=limit)
+    return crud_admins.get_admins(db=db)
 
 
 @router.get("/api/admin/{admin_id}/", response_model=schemas.AdminOut)
