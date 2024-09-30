@@ -55,3 +55,5 @@ def delete_company(
     db: Session = Depends(utils_db.get_db)
 ):
     return crud_companies.delete_company(db=db, admin_id=admin_id, company_id=company_id)
+
+
