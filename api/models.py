@@ -56,7 +56,7 @@ class Client(Base):
     
     id = Column(Integer, primary_key=True)
     full_name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
+    email = Column(String, unique=False, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="clients")
     credits = relationship("Sale", back_populates="client")
