@@ -40,15 +40,19 @@ class ServiceOut(ServiceIn):
         from_attributes = True
 
 
-# SaleItem model Classes
-class SaleItemIn(BaseModel):
+# ServiceItem model Classes
+class ServiceItemIn(BaseModel):
     service_id: int
+    client_id: int
 
 
-class SaleItemOut(SaleItemIn):
+class ServiceItemOut(ServiceItemIn):
     id: int
     service_title: str
     price: int
+    is_active: bool
+    is_redeemed: bool
+    completed_on: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -63,11 +67,13 @@ class SaleIn(BaseModel):
 class SaleOut(BaseModel):
     id: int
     company_id: int
+    company_name: str
     date: datetime
     client_id: int
+    client_name: str
     total_due: int
     is_paid: bool
-    service_items: List[SaleItemOut]
+    service_items: List[ServiceItemOut]
 
     class Config:
         from_attributes = True
@@ -82,7 +88,7 @@ class ClientIn(BaseModel):
 class ClientOut(ClientIn):
     id: int
     company_id: int
-    credits: list[SaleItemOut] = []
+    credits: list[ServiceItemOut] = []
     appointments: list[AppointmentOut] = []
 
     class Config:

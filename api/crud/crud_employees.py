@@ -26,7 +26,11 @@ def create_employee(
 
 
 def list_employees_by_company(db: Session, company_id: int):
-    return db.query(models.Employee).filter(models.Employee.company_id == company_id).all()
+
+    employee_list = db.query(models.Employee).filter(models.Employee.company_id == company_id).all()
+    if len(employee_list) == 0:
+        return None
+    return employee_list
 
 
 def get_employee_details(

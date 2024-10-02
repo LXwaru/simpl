@@ -31,7 +31,10 @@ def list_employees_by_company(
     company_id: int,
     db: Session = Depends(utils_db.get_db)
 ):
-    return crud_employees.list_employees_by_company(db=db, company_id=company_id)
+    employee_list = crud_employees.list_employees_by_company(db=db, company_id=company_id)
+    if employee_list is None:
+        raise HTTPException(status_code=404, detail=f"company with id number {company_id} has no employees")
+    return employee_list
 
 
 @router.get("/api/employee/{company_id}/{employee_id}", response_model=schemas.EmployeeOut)

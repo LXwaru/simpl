@@ -51,17 +51,6 @@ class Employee(Base):
     company = relationship("Company", back_populates="employees")
 
 
-class Client(Base):
-    __tablename__ = "clients"
-    
-    id = Column(Integer, primary_key=True)
-    full_name = Column(String, index=True)
-    email = Column(String, unique=False, index=True)
-    company_id = Column(Integer, ForeignKey("companies.id"))
-    company = relationship("Company", back_populates="clients")
-    credits = relationship("Sale", back_populates="client")
-
-
 class Admin(Base):
     __tablename__ = "admins"
     
@@ -91,6 +80,21 @@ class Service(Base):
     service_items = relationship("ServiceItem", back_populates="service")
 
 
+class Client(Base):
+    __tablename__ = "clients"
+    __table_args__ = (
+        UniqueConstraint('email', 'company_id'),
+    )
+    
+    id = Column(Integer, primary_key=True)
+    full_name = Column(String, index=True)
+    email = Column(String, unique=False, index=True)
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    company = relationship("Company", back_populates="clients")
+    credits = relationship("ServiceItem", back_populates="client")
+    sales = relationship('Sale', back_populates='client')
+
+
 class ServiceItem(Base):
     __tablename__ = "service_items"
 
@@ -98,8 +102,16 @@ class ServiceItem(Base):
     service_id = Column(Integer, ForeignKey('services.id'))
     service_title = Column(String, index=True)
     price = Column(Integer, index=True)
+    # is_active is False until sale.is_paid = True
+    is_active = Column(Boolean, default=False)
+    # is_redeemed is False until the service_item's is_completed date
+    is_redeemed = Column(Boolean, default=False)
+    # completed_on is a nullable field that is filled with a datetime when the service_item is completed
+    completed_on = Column(DateTime(timezone=True), nullable=True)
     sale_id = Column(Integer, ForeignKey('sales.id'))
-    sales = relationship('Sale', back_populates='service_items')
+    client_id = Column(Integer, ForeignKey('clients.id'))
+    sale = relationship('Sale', back_populates='service_items')
+    client = relationship('Client', back_populates='credits')
 
     service = relationship("Service", back_populates='service_items')
 
@@ -110,15 +122,16 @@ class Sale(Base):
     
     id = Column(Integer, primary_key=True)
     company_id = Column(Integer, ForeignKey('companies.id'))
+    company_name = Column(String, index=True)
     date = Column(TIMESTAMP(timezone=True), default=utc_now)
     client_id = Column(Integer, ForeignKey("clients.id"))
     client_name = Column(String, index=True)
     total_due = Column(Numeric, index=True)
     is_paid = Column(Boolean, default=False)
-    service_items: Mapped[List["ServiceItem"]] = relationship(back_populates='sales')
+    service_items: Mapped[List["ServiceItem"]] = relationship(back_populates='sale')
 
     company = relationship("Company", back_populates="sales")
-    client = relationship("Client", back_populates="credits")
+    client = relationship("Client", back_populates="sales")
     
 
 

@@ -36,7 +36,10 @@ def get_company_by_admin(
     admin_id: int,
     db: Session = Depends(utils_db.get_db)
 ):
-    return crud_companies.get_company(db=db, admin_id=admin_id)
+    company = crud_companies.get_company(db=db, admin_id=admin_id)
+    if company is None:
+        raise HTTPException(status_code=404, detail='company not found')
+    return company
 
 
 @router.put('/api/company/{admin_id}/', response_model=schemas.CompanyOut)

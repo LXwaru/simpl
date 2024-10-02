@@ -21,9 +21,9 @@ def create_company(
 
 def get_company(
         db: Session,
-        admin_id
+        admin_id: int
 ):
-        return db.query(models.Company).filter(models.Company.admin_id == admin_id).one()
+        return db.query(models.Company).filter(models.Company.admin_id == admin_id).one_or_none()
 
 
 def get_all_companies(db: Session):
