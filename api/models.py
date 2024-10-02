@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval, func, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, TIMESTAMP, Numeric, Interval, func, Table, UniqueConstraint
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import List
 from pydantic import BaseModel
@@ -76,14 +76,17 @@ class Admin(Base):
 
 class Service(Base):
     __tablename__ = "services"
+    __table_args__ = (
+        UniqueConstraint('title', 'company_id'),
+    )
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String, unique=True, index=True)
-    price = Column(Numeric, index=True)
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    price = Column(Numeric, index=True, nullable=False)
     description = Column(String, index=True)
-    duration = Column(Interval)
+    duration = Column(Interval, nullable=False)
     is_enabled = Column(Boolean, default=True)
-    company_id = Column(Integer, ForeignKey("companies.id"))
+    company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
     company = relationship("Company", back_populates="services")
     service_items = relationship("ServiceItem", back_populates="service")
 
