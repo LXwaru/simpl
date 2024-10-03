@@ -105,6 +105,7 @@ class EmployeeOut(EmployeeIn):
     id: int
     company_id: int
     is_active: bool
+    appointments: list[AppointmentOut] = []
 
     class Config:
         from_attribute = True

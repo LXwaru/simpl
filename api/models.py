@@ -49,6 +49,7 @@ class Employee(Base):
     is_active = Column(Boolean, default=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="employees")
+    appointments = relationship('Appointment', back_populates='employee')
 
 
 class Admin(Base):
@@ -93,6 +94,7 @@ class Client(Base):
     company = relationship("Company", back_populates="clients")
     credits = relationship("ServiceItem", back_populates="client")
     sales = relationship('Sale', back_populates='client')
+    appointments = relationship('Appointment', back_populates='client')
 
 
 class ServiceItem(Base):
@@ -149,6 +151,8 @@ class Appointment(Base):
 
     company_id = Column(Integer, ForeignKey('companies.id'))
     company = relationship("Company", back_populates="appointments")
+    client = relationship('Client', back_populates='appointments')
+    employee = relationship('Employee', back_populates='appointments')
 
 
 class HttpError(BaseModel):
