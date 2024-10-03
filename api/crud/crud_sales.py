@@ -126,6 +126,7 @@ def deem_sale_paid(
     db.refresh(sale)
     return sale
 
+
 def delete_sale(
     db: Session,
     company_id: int,

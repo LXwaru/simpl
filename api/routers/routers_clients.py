@@ -66,3 +66,5 @@ def delete_client(
     db: Session = Depends(utils_db.get_db)
 ):
     return crud_clients.delete_client(db=db, company_id=company_id, client_id=client_id)
+
+

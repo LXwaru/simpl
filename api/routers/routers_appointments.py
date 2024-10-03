@@ -20,25 +20,105 @@ def create_new_appointment(
     appointment: schemas.AppointmentIn,
     db: Session = Depends(utils_db.get_db)
 ):
-    appointment = crud_appointments.create_new_appointment(db=db, appointment=appointment, company_id=company_id)
+    appointment = crud_appointments.create_new_appointment(
+        db=db, 
+        appointment=appointment, 
+        company_id=company_id
+    )
     return appointment
 
 
-@router.get('/api/{company_id}/appointments/')
-def list_appointments():
-    pass
+@router.get('/api/{company_id}/appointments/', response_model=list[schemas.AppointmentOut])
+def list_appointments(
+    company_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointments = crud_appointments.list_appointments(
+        db=db, company_id=company_id
+    )
+    if appointments is None:
+        raise HTTPException(status_code=404, detail='no appointments found')
+    return appointments
 
 
-@router.get('/api/{company_id}/appointment/{appointment_id}')
-def detail_appointment():
-    pass
+@router.get('/api/{company_id}/appointment/{appointment_id}', response_model=schemas.AppointmentOut)
+def detail_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.get_appointment_details(
+        db=db,
+        company_id=company_id,
+        appointment_id=appointment_id
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    return appointment
 
 
-@router.put('/api/{company_id}/appointment/{appointment_id}')
-def edit_appointment():
-    pass
+@router.put('/api/{company_id}/appointment_edit/{appointment_id}', response_model=schemas.AppointmentOut)
+def edit_entire_appointment(
+    company_id: int,
+    appointment_id: int,
+    updated_appointment: schemas.AppointmentIn,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.edit_appointment(
+        db=db, 
+        company_id=company_id, 
+        appointment_id=appointment_id,
+        updated_appointment=updated_appointment
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    return appointment
+
+
+@router.put('/api/{company_id}/appointment_confirm/{appointment_id}', response_model=schemas.AppointmentOut)
+def toggle_confirm_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.toggle_confirm_appointment(
+        db=db,
+        company_id=company_id,
+        appointment_id=appointment_id
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    return appointment
+
+
+@router.put('/api/{company_id}/appointment_checkout/{appointment_id}', response_model=schemas.AppointmentOut)
+def checkout_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.checkout_appointment(
+        db=db,
+        company_id=company_id,
+        appointment_id=appointment_id
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    return appointment
 
 
 @router.delete('/api/{company_id}/appointment/{appointment_id}')
-def delete_appointment():
-    pass
+def delete_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session = Depends(utils_db.get_db)
+):
+    appointment = crud_appointments.delete_appointment(
+        db=db, 
+        company_id=company_id, 
+        appointment_id=appointment_id
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    
+    return appointment
