@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 
 
 const Nav = () => {
     const [ username, setUsername ] = useState('')
+    const navigate = useNavigate()
+    const accessToken = localStorage.getItem('access_token')
 
 
     useEffect(() => {
@@ -22,14 +24,24 @@ const Nav = () => {
         fetchAdminData()
     }, [username])
 
+        const handleLogout = () => {
+            localStorage.removeItem('access_token')
+            navigate('/')
+            
+        }
 
     return (
         <>
             <nav className="navbar bg-body-tertiary fixed-top">
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">simpl business solutions [s | b | s ]</NavLink>
+                {accessToken && (
+                    <button className='navbar-brand' onClick={handleLogout}>logout</button>
+                )}
+                {!accessToken && (
+                    <NavLink className="navbar-brand" to="/login">login or create account</NavLink>
 
-                <NavLink className="navbar-brand" to="/login">login or create account</NavLink>
+                )}
                 <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
                 </button>

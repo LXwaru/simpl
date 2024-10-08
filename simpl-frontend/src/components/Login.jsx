@@ -89,12 +89,12 @@ const Login = () => {
                             submit
                     </button>
                     <br />
+                </form>
                     <button 
                         type="link" 
                         className='btn btn-link'>
                             create account
                     </button>
-                </form>
             </div>
         </>
     )
