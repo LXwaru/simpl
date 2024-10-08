@@ -6,7 +6,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from .. import schemas, utils_db
+from .. import schemas, utils_db, utils_sec
 from ..crud import crud_services
 from sqlalchemy.orm import Session
 
@@ -18,7 +18,8 @@ router = APIRouter()
 def create_service(
     company_id: int,
     service: schemas.ServiceIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     db_service = crud_services.lookup_service_by_name(
         db, 
@@ -30,14 +31,16 @@ def create_service(
     return crud_services.register_new_service(
         db=db, 
         service=service, 
-        company_id=company_id
+        company_id=company_id,
+        
     )
 
 
 @router.get('/api/{company_id}/services')
 def list_services(
     company_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     services = crud_services.list_services(db=db, company_id=company_id)
     return services
@@ -47,7 +50,8 @@ def list_services(
 def get_one_service(
     company_id: int,
     service_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     service = crud_services.get_services_by_id(
         db=db, 
@@ -64,7 +68,8 @@ def update_service(
     company_id: int,
     service_id: int,
     service_update: schemas.ServiceIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     service = crud_services.update_service(
         db=db, 
@@ -81,7 +86,8 @@ def update_service(
 def toggle_service_status(
     company_id: int,
     service_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     service = crud_services.toggle_activation(
         db=db, 
@@ -97,6 +103,7 @@ def toggle_service_status(
 def delete_service(
     company_id: int,
     service_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_services.delete_service(db, service_id, company_id=company_id)

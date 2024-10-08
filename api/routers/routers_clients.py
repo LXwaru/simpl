@@ -6,7 +6,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from .. import schemas, utils_db
+from .. import schemas, utils_db, utils_sec
 from ..crud import crud_clients
 from sqlalchemy.orm import Session
 
@@ -18,7 +18,8 @@ router = APIRouter()
 def create_client(
     company_id: int,
     client: schemas.ClientIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     duplicate = crud_clients.client_duplicate_check(db, email=client.email, company_id=company_id)
     if duplicate:
@@ -29,7 +30,8 @@ def create_client(
 @router.get('/api/clients/{company_id}/', response_model=list[schemas.ClientOut])
 def list_clients(
     company_id: int, 
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     clients = crud_clients.get_clients_by_company_id(db=db, company_id=company_id)
     return clients
@@ -39,7 +41,8 @@ def list_clients(
 def get_client_details(
     company_id: int,
     client_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_clients.get_client_details(db=db, company_id=company_id, client_id=client_id)
 
@@ -49,7 +52,8 @@ def edit_client_info(
     company_id: int,
     client_id: int,
     client_info: schemas.ClientIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_clients.edit_client_info(
         db=db,
@@ -63,7 +67,8 @@ def edit_client_info(
 def delete_client(
     company_id: int,
     client_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_clients.delete_client(db=db, company_id=company_id, client_id=client_id)
 

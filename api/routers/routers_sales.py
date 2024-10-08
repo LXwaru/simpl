@@ -6,7 +6,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from .. import schemas, utils_db
+from .. import schemas, utils_db, utils_sec
 from ..crud import crud_sales
 from sqlalchemy.orm import Session
 
@@ -18,7 +18,8 @@ router = APIRouter()
 def create_new_sale(
     company_id: int,
     sale: schemas.SaleIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_sales.create_sale(
         db=db,
@@ -30,7 +31,8 @@ def create_new_sale(
 @router.get('/api/{company_id}/sales/', response_model=list[schemas.SaleOut])
 def list_sales(
     company_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     sale = crud_sales.list_sales(
         db=db, company_id=company_id
@@ -44,7 +46,8 @@ def list_sales(
 def get_sale(
     company_id: int,
     sale_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     sale = crud_sales.get_sale(
         db=db,
@@ -60,7 +63,8 @@ def get_sale(
 def deem_sale_paid(
     company_id: int,
     sale_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     sale = crud_sales.deem_sale_paid(
         db=db, company_id=company_id, sale_id=sale_id)
@@ -73,6 +77,7 @@ def deem_sale_paid(
 def delete_sale(
     company_id: int,
     sale_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_sales.delete_sale(db=db, company_id=company_id, sale_id=sale_id)

@@ -6,7 +6,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from .. import schemas, utils_db
+from .. import schemas, utils_db, utils_sec
 from ..crud import crud_companies
 from sqlalchemy.orm import Session
 
@@ -18,14 +18,16 @@ router = APIRouter()
 def create_company(
     admin_id: int,
     company: schemas.CompanyIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_companies.create_company(db=db, company=company, admin_id=admin_id)
 
 
 @router.get('/api/companies', response_model=list[schemas.CompanyOut])
 def get_all_companies(
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     companies = crud_companies.get_all_companies(db=db)
     return companies
@@ -34,7 +36,8 @@ def get_all_companies(
 @router.get('/api/company/{admin_id}/', response_model=schemas.CompanyOut)
 def get_company_by_admin(
     admin_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     company = crud_companies.get_company(db=db, admin_id=admin_id)
     if company is None:
@@ -46,7 +49,8 @@ def get_company_by_admin(
 def edit_info(
     admin_id: int,
     company: schemas.CompanyIn,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_companies.edit_info(db=db, admin_id=admin_id, company=company)
 
@@ -55,7 +59,8 @@ def edit_info(
 def delete_company(
     admin_id: int,
     company_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_companies.delete_company(db=db, admin_id=admin_id, company_id=company_id)
 

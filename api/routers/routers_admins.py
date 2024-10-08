@@ -6,7 +6,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
-from .. import schemas, utils_db
+from .. import schemas, utils_db, utils_sec
 from ..crud import crud_admins
 from sqlalchemy.orm import Session
 
@@ -27,7 +27,8 @@ def create_admin(
 
 @router.get("/api/admins/", response_model=list[schemas.AdminOut])
 def list_admins(
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_admins.get_admins(db=db)
 
@@ -35,7 +36,8 @@ def list_admins(
 @router.get("/api/admin/{admin_id}/", response_model=schemas.AdminOut)
 def get_admin_by_id(
     admin_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_admins.get_admin(db, admin_id=admin_id)
 
@@ -43,7 +45,8 @@ def get_admin_by_id(
 @router.put("/api/admin/{admin_id}/", response_model=schemas.AdminOut)
 def toggle_activation_status_admin(
     admin_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_admins.toggle_activation_status_admin(db=db, admin_id=admin_id)
 
@@ -51,6 +54,7 @@ def toggle_activation_status_admin(
 @router.delete("/api/admin/{admin_id}/")
 def delete_admin(
     admin_id: int,
-    db: Session = Depends(utils_db.get_db)
+    db: Session = Depends(utils_db.get_db),
+    current_user: str = Depends(utils_sec.get_current_active_user)
 ):
     return crud_admins.delete_admin(db=db, admin_id=admin_id)

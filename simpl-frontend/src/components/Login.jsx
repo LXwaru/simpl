@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Login = () => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
+    const navigate = useNavigate()
 
     // useEffect (() => {
     //     try {
@@ -42,7 +44,9 @@ const Login = () => {
                 }
             }
         )
-        console.log(loginResponse)
+        localStorage.setItem('access_token', loginResponse.access_token)
+        console.log('login successful, token saved', loginResponse.access_token)
+        // navigate('/dashboard')
         } catch (error) {
             console.error('login failed', error)
         }
@@ -50,13 +54,11 @@ const Login = () => {
 
     const handleUsernameChange = (e) => {
         e.preventDefault()
-        console.log(e.target.value)
         setUsername(e.target.value)
     }
 
     const handlePasswordChange = (e) => {
         e.preventDefault()
-        console.log(e.target.value)
         setPassword(e.target.value)
     }
 
