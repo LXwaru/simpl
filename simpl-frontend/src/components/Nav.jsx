@@ -10,19 +10,19 @@ const Nav = () => {
     const accessToken = localStorage.getItem('access_token')
 
 
-    useEffect(() => {
-        const token = localStorage.getItem('access_token')
-        const fetchAdminData = async () => {
-            const adminResponse = await axios.get('http://localhost:8000/users/me', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            // console.log(adminResponse.data.username)
-            setUsername(adminResponse.data.username)
-        }
-        fetchAdminData()
-    }, [username])
+    // useEffect(() => {
+    //     const token = localStorage.getItem('access_token')
+    //     const fetchAdminData = async () => {
+    //         const adminResponse = await axios.get('http://localhost:8000/users/me', {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         })
+    //         // console.log(adminResponse.data.username)
+    //         setUsername(adminResponse.data.username)
+    //     }
+    //     fetchAdminData()
+    // }, [])
 
         const handleLogout = () => {
             localStorage.removeItem('access_token')

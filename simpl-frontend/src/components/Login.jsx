@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Login = () => {
@@ -90,11 +90,10 @@ const Login = () => {
                     </button>
                     <br />
                 </form>
-                    <button 
-                        type="link" 
-                        className='btn btn-link'>
-                            create account
-                    </button>
+                    <Link
+                        className='btn btn-link' 
+                        to='/create-account'>create account
+                    </Link>
             </div>
         </>
     )
