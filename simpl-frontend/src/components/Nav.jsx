@@ -5,31 +5,22 @@ import axios from 'axios'
 
 
 const Nav = () => {
-    const [ token, setToken ] = useState('access-token')
     const [ username, setUsername ] = useState('')
 
 
     useEffect(() => {
-        const fetchToken= async () => {
-            const accessToken = localStorage.getItem('access_token')
-            console.log(accessToken)
-            setToken(accessToken)
-            const tokenResponse = await axios.get('http://localhost:8000/token', {
+        const token = localStorage.getItem('access_token')
+        const fetchAdminData = async () => {
+            const adminResponse = await axios.get('http://localhost:8000/users/me', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(tokenResponse)
-            
+            // console.log(adminResponse.data.username)
+            setUsername(adminResponse.data.username)
         }
-        fetchToken()
-    }, [token])
-
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         const userResponse = 
-    //     }
-    // }, [])
+        fetchAdminData()
+    }, [username])
 
 
     return (
@@ -44,13 +35,13 @@ const Nav = () => {
                 </button>
                 <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div className="offcanvas-header">
-                    <h5 className="offcanvas-title" id="offcanvasNavbarLabel">S|B|S - welcome</h5>
+                    <h5 className="offcanvas-title" id="offcanvasNavbarLabel">[s | b | s] - welcome {username}</h5>
                     <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
                     <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li className="nav-item">
-                        <a className="nav-link active" aria-current="page" href="/">home</a>
+                        <a className="nav-link active" aria-current="page" href="/dashboard">dashboard</a>
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="/login">login or create account</a>

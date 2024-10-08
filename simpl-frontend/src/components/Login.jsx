@@ -5,25 +5,8 @@ import axios from 'axios'
 const Login = () => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
+    const [ token, setToken ] = useState('')
     const navigate = useNavigate()
-
-    // useEffect (() => {
-    //     try {
-    //         const loginResponse = axios.post('http://localhost:8000/token', {
-    //             username: username,
-    //             password: password
-    //         },
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         }
-    //     )
-    //         console.log(loginResponse.data)
-
-    //     } catch (error) {
-    //     }
-    // }, [username, password])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -45,12 +28,26 @@ const Login = () => {
             }
         )
         localStorage.setItem('access_token', loginResponse.access_token)
+        setToken(loginResponse.access_token)
         console.log('login successful, token saved', loginResponse.access_token)
-        // navigate('/dashboard')
+        // window.location.reload()
+        navigate('/dashboard')
         } catch (error) {
             console.error('login failed', error)
         }
     }
+
+    // useEffect(() => {
+    //     const fetchAdminData = async () => {
+    //         const response = await axios.get('http://localhost:8000/users/me', {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         })
+    //         console.log(response)
+    //     }
+    //     fetchAdminData()
+    // }, [token])
 
     const handleUsernameChange = (e) => {
         e.preventDefault()
