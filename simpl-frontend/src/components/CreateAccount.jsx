@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../features/user/userSlice'
 
 
 const CreateAccount = () => {
@@ -8,10 +10,11 @@ const CreateAccount = () => {
     const [ password, setPassword ] = useState('')
     const [ confirmPassword, setConfirmPassword ] = useState('')
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     
 
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (password !== confirmPassword) {
             alert('passwords do not match')
             return
@@ -26,6 +29,36 @@ const CreateAccount = () => {
             
         } catch (error) {
             console.error('could not register new admin', error)
+        } finally {
+            try {
+                const { data: loginResponse } = await axios.post(
+                    'http://localhost:8000/token', 
+                    new URLSearchParams({
+                        grant_type: 'password',
+                        username: username,
+                        password: password,
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    withCredentials: true
+                }
+            )
+            const userResponse = await axios.get('http://localhost:8000/users/me', {
+                withCredentials: true
+            })
+    
+            dispatch(setUser(userResponse.data))
+    
+            setErrorMessage('')
+    
+            console.log('login successful, token saved', loginResponse)
+            navigate('/dashboard')
+            } catch (error) {
+                console.error('login failed', error)
+                setErrorMessage('login failed. check credentials and try again')
+            }
         }
     }
 

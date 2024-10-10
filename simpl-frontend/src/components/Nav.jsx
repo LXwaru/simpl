@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
@@ -12,27 +11,6 @@ const Nav = () => {
     const user = useSelector((state) => state.user.value)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
-    // useEffect(() => {
-    //     const checkAuthStatus = async () => {
-    //         try {
-    //             const response = await axios.get('http://localhost:8000/users/me', {
-    //                 withCredentials: true
-    //             })
-    //             setUser(response.data)
-    //             setIsAuthenticated(true)
-    //         } catch (error) {
-    //             if (error.response?.status === 401) {
-    //                 setIsAuthenticated(false)
-    //                 setUser(null)
-    //             } else {
-    //                 console.error('error fetching user data:', error)
-    //             }
-    //         }
-    //     }
-    //     checkAuthStatus()
-    // }, [])
-
 
     const handleLogout = async () => {
         try {
@@ -52,8 +30,10 @@ const Nav = () => {
             <nav className="navbar bg-body-tertiary fixed-top">
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">simpl business solutions [s | b | s ]</NavLink>
-                    {user ? (
+                    {user ? (<>
+                        <NavLink className='navbar-brand' to='/companydetails'>{user.company.name} </NavLink>
                         <button className='navbar-brand' onClick={handleLogout}>logout</button>
+                    </>
                     ) : (
                         <NavLink className='navbar-brand' to='/login'>login or create account</NavLink>
                     )}
@@ -68,9 +48,26 @@ const Nav = () => {
                 <div className="offcanvas-body">
                     <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                         {user ? (
-                        <li className="nav-item">
-                            <NavLink className="nav-link active" aria-current="page" to="/dashboard">dashboard</NavLink>
-                        </li>
+                            <>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/dashboard">dashboard</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/listservices">services</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/listclients">clients</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/listemployees">employees</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/listsales">sales</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/listemployees">employees</NavLink>
+                                </li>
+                            </>
                         ):(
                             <p>please log in</p>
                         )}
