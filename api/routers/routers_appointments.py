@@ -9,6 +9,9 @@ from fastapi import (
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_appointments
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -19,7 +22,7 @@ def create_new_appointment(
     company_id: int,
     appointment: schemas.AppointmentIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.create_new_appointment(
         db=db, 
@@ -33,7 +36,7 @@ def create_new_appointment(
 def list_appointments(
     company_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointments = crud_appointments.list_appointments(
         db=db, company_id=company_id
@@ -48,7 +51,7 @@ def detail_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.get_appointment_details(
         db=db,
@@ -66,7 +69,7 @@ def edit_entire_appointment(
     appointment_id: int,
     updated_appointment: schemas.AppointmentIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.edit_appointment(
         db=db, 
@@ -84,7 +87,7 @@ def toggle_confirm_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.toggle_confirm_appointment(
         db=db,
@@ -101,7 +104,7 @@ def checkout_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.checkout_appointment(
         db=db,
@@ -118,7 +121,7 @@ def delete_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     appointment = crud_appointments.delete_appointment(
         db=db, 

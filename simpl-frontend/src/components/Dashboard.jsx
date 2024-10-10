@@ -9,11 +9,8 @@ const Dashboard = () => {
     
     useEffect(() => {
         const getData = async () => {
-            const token = localStorage.getItem('access_token')
             const adminResponse = await axios.get('http://localhost:8000/users/me', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                withCredentials: true
             })
             console.log(adminResponse.data.company.name)
             setCompanyName(adminResponse.data.company.name)

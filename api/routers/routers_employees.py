@@ -9,6 +9,9 @@ from fastapi import (
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_employees
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -19,7 +22,7 @@ def create_employee(
     company_id: int,
     employee: schemas.EmployeeIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     db_employee = crud_employees.get_employee_by_email(db, email=employee.email)
     if db_employee:
@@ -31,7 +34,7 @@ def create_employee(
 def list_employees_by_company(
     company_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     employee_list = crud_employees.list_employees_by_company(db=db, company_id=company_id)
     if employee_list is None:
@@ -44,7 +47,7 @@ def get_employee_details(
     company_id: int,
     employee_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_employees.get_employee_details(
         company_id=company_id,
@@ -59,7 +62,7 @@ def update_employee_info(
     employee_id: int,
     employee_update: schemas.EmployeeIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_employees.update_employee_info(
         db=db, 
@@ -74,7 +77,7 @@ def toggle_employee_active_status(
     company_id: int,
     employee_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_employees.toggle_employee_active_status(
         db=db, 
@@ -88,6 +91,6 @@ def delete_employee(
     company_id: int,
     employee_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_employees.delete_employee(db=db, employee_id=employee_id, company_id=company_id)

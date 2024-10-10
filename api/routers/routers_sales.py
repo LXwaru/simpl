@@ -9,6 +9,9 @@ from fastapi import (
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_sales
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -19,7 +22,7 @@ def create_new_sale(
     company_id: int,
     sale: schemas.SaleIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_sales.create_sale(
         db=db,
@@ -32,7 +35,7 @@ def create_new_sale(
 def list_sales(
     company_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     sale = crud_sales.list_sales(
         db=db, company_id=company_id
@@ -47,7 +50,7 @@ def get_sale(
     company_id: int,
     sale_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     sale = crud_sales.get_sale(
         db=db,
@@ -64,7 +67,7 @@ def deem_sale_paid(
     company_id: int,
     sale_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     sale = crud_sales.deem_sale_paid(
         db=db, company_id=company_id, sale_id=sale_id)
@@ -78,6 +81,6 @@ def delete_sale(
     company_id: int,
     sale_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_sales.delete_sale(db=db, company_id=company_id, sale_id=sale_id)

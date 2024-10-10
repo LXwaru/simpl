@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { setUser } from '../features/user/userSlice'
 
 const Login = () => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
-    const [ token, setToken ] = useState('')
+    const [ errorMessage, setErrorMessage ] = useState('')
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -17,37 +20,29 @@ const Login = () => {
                     grant_type: 'password',
                     username: username,
                     password: password,
-                    scope: '',
-                    client_id: '',
-                    client_secret: ''
             }),
             {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                },
+                withCredentials: true
             }
         )
-        localStorage.setItem('access_token', loginResponse.access_token)
-        setToken(loginResponse.access_token)
-        console.log('login successful, token saved', loginResponse.access_token)
-        // window.location.reload()
+        const userResponse = await axios.get('http://localhost:8000/users/me', {
+            withCredentials: true
+        })
+
+        dispatch(setUser(userResponse.data))
+
+        setErrorMessage('')
+
+        console.log('login successful, token saved', loginResponse)
         navigate('/dashboard')
         } catch (error) {
             console.error('login failed', error)
+            setErrorMessage('login failed. check credentials and try again')
         }
     }
-
-    // useEffect(() => {
-    //     const fetchAdminData = async () => {
-    //         const response = await axios.get('http://localhost:8000/users/me', {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
-    //             }
-    //         })
-    //         console.log(response)
-    //     }
-    //     fetchAdminData()
-    // }, [token])
 
     const handleUsernameChange = (e) => {
         e.preventDefault()
@@ -70,19 +65,26 @@ const Login = () => {
                         <h3>
                             login
                         </h3>
+                        {errorMessage && <p className='text-danger'>{errorMessage}</p>}
                     </label>
                     <input 
                         type="username" 
                         onChange={handleUsernameChange}
+                        value={username}
                         className="form-control" 
                         id="username" 
-                        placeholder="username" />
+                        placeholder="username"
+                        required
+                    />
                     <input 
                         type="password" 
                         onChange={handlePasswordChange}
+                        value={password}
                         className="form-control" 
                         id="password" 
-                        placeholder="password" />
+                        placeholder="password" 
+                        required
+                    />
                     <button 
                         type="submit" 
                         className='btn btn-success'>

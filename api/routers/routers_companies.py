@@ -9,6 +9,9 @@ from fastapi import (
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_companies
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -19,7 +22,7 @@ def create_company(
     admin_id: int,
     company: schemas.CompanyIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_companies.create_company(db=db, company=company, admin_id=admin_id)
 
@@ -27,7 +30,7 @@ def create_company(
 @router.get('/api/companies', response_model=list[schemas.CompanyOut])
 def get_all_companies(
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     companies = crud_companies.get_all_companies(db=db)
     return companies
@@ -37,7 +40,7 @@ def get_all_companies(
 def get_company_by_admin(
     admin_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     company = crud_companies.get_company(db=db, admin_id=admin_id)
     if company is None:
@@ -50,7 +53,7 @@ def edit_info(
     admin_id: int,
     company: schemas.CompanyIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_companies.edit_info(db=db, admin_id=admin_id, company=company)
 
@@ -60,7 +63,7 @@ def delete_company(
     admin_id: int,
     company_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_companies.delete_company(db=db, admin_id=admin_id, company_id=company_id)
 

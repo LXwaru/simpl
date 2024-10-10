@@ -9,6 +9,9 @@ from fastapi import (
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_services
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordBearer
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 router = APIRouter()
@@ -19,7 +22,7 @@ def create_service(
     company_id: int,
     service: schemas.ServiceIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     db_service = crud_services.lookup_service_by_name(
         db, 
@@ -40,7 +43,7 @@ def create_service(
 def list_services(
     company_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     services = crud_services.list_services(db=db, company_id=company_id)
     return services
@@ -51,7 +54,7 @@ def get_one_service(
     company_id: int,
     service_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     service = crud_services.get_services_by_id(
         db=db, 
@@ -69,7 +72,7 @@ def update_service(
     service_id: int,
     service_update: schemas.ServiceIn,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     service = crud_services.update_service(
         db=db, 
@@ -87,7 +90,7 @@ def toggle_service_status(
     company_id: int,
     service_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     service = crud_services.toggle_activation(
         db=db, 
@@ -104,6 +107,6 @@ def delete_service(
     company_id: int,
     service_id: int,
     db: Session = Depends(utils_db.get_db),
-    current_user: str = Depends(utils_sec.get_current_active_user)
+    token: str = Depends(oauth2_scheme)
 ):
     return crud_services.delete_service(db, service_id, company_id=company_id)

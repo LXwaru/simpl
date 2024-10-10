@@ -9,6 +9,7 @@ from fastapi import (
     APIRouter,
     Request,
 )
+import jwt
 from .. import models, utils_sec, utils_db, schemas
 from sqlalchemy.orm import Session
 
@@ -23,7 +24,7 @@ async def get_token(
     return {'token': token}
 
 
-@router.post("/token")
+@router.post("/token", response_model=models.Token)
 async def login_for_access_token(
     response: Response,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
@@ -47,15 +48,46 @@ async def login_for_access_token(
         value=access_token,
         httponly=True,
         secure=True,
-        samesite='lax',
+        samesite='Lax',
         max_age=1800
     )
-    return {'message': 'login successful'}
-
+    return models.Token(access_token=access_token, token_type='bearer')
 
 
 @router.get("/users/me", response_model=schemas.AdminOut)
 async def read_users_me(
-    current_user: Annotated[models.Admin, Depends(utils_sec.get_current_active_user)]
+    request: Request,
+    db: Session = Depends(utils_db.get_db),
     ):  
+    access_token = request.cookies.get('access_token')
+    if not access_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='no access token found in cookies'
+        )
+    
+    try:
+        payload = jwt.decode(access_token, utils_sec. SECRET_KEY, algorithms=[utils_sec.ALGORITHM])
+        username: str = payload.get('sub')
+        if username is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="invalid token payload"
+            )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='token has expired'
+        )
+    except jwt.InvalidTokenError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='invalid token'
+        )
+    current_user = utils_sec.get_user(db, username)
+    if current_user is None:
+        raise HTTPException(
+            status=status.HTTP_401_UNAUTHORIZED,
+            detail='user not found'
+        )
     return current_user
