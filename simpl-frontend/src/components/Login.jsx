@@ -36,7 +36,7 @@ const Login = () => {
 
         setErrorMessage('')
 
-        console.log('login successful, token saved', loginResponse)
+        console.log('login successful, token saved')
         navigate('/dashboard')
         } catch (error) {
             console.error('login failed', error)

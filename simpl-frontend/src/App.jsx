@@ -5,7 +5,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import CreateAccount from './components/CreateAccount'
-import CompanyDetails from './components/CompanyDetails'
+import CreateCompany from './components/CreateCompany'
 import ListClients from './components/ListClients'
 import ListEmployees from './components/ListEmployees'
 import ListSales from './components/ListSales'
@@ -26,12 +26,12 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/create-account' element={<CreateAccount />} />
-          <Route path='/companydetails' element={<CompanyDetails />} />
-          <Route path='/listclients' element={<ListClients />} /> 
-          <Route path='/listemployees' element={<ListEmployees />} /> 
-          <Route path='/listsales' element={<ListSales />} /> 
-          <Route path='/listappointments' element={<ListAppointments />} /> 
-          <Route path='/listservices' element={<ListServices />} /> 
+          <Route path='/list-clients' element={<ListClients />} /> 
+          <Route path='/list-employees' element={<ListEmployees />} /> 
+          <Route path='/list-sales' element={<ListSales />} /> 
+          <Route path='/list-appointments' element={<ListAppointments />} /> 
+          <Route path='/list-services' element={<ListServices />} /> 
+          <Route path='/create-company' element={<CreateCompany />} />
         </Routes>
       </div>
     </BrowserRouter>

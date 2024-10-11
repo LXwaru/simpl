@@ -8,6 +8,7 @@ const Dashboard = () => {
     const user = useSelector((state) => state.user.value)
     const dispatch = useDispatch()
     const [ loading, setLoading ] = useState(true)
+    const navigate = useNavigate()
 
     
     useEffect(() => {
@@ -18,6 +19,10 @@ const Dashboard = () => {
                 const response = await axios.get('http://localhost:8000/users/me', {
                     withCredentials: true
                 })
+                if (user === null) {
+                    navigate('/')
+                    return
+                }
                 dispatch(setUser(response.data))
             } catch (error) {
                 console.error('failed to fetch user data', error)

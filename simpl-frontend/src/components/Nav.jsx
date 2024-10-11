@@ -30,10 +30,15 @@ const Nav = () => {
             <nav className="navbar bg-body-tertiary fixed-top">
             <div className="container-fluid">
                 <NavLink className="navbar-brand" to="/">simpl business solutions [s | b | s ]</NavLink>
-                    {user ? (<>
-                        <NavLink className='navbar-brand' to='/companydetails'>{user.company.name} </NavLink>
-                        <button className='navbar-brand' onClick={handleLogout}>logout</button>
-                    </>
+                    {user ? (
+                        <>
+                            {user?.company?.name ? (
+                                <NavLink className='navbar-brand' to='/dashboard'>{user.company.name} </NavLink>
+                            ) : (
+                                <NavLink className='navbar-brand' to='/create-company'>register new company</NavLink>
+                            )}
+                            <button className='navbar-brand' onClick={handleLogout}>logout</button>
+                        </>
                     ) : (
                         <NavLink className='navbar-brand' to='/login'>login or create account</NavLink>
                     )}
@@ -53,19 +58,19 @@ const Nav = () => {
                                     <NavLink className="nav-link active" aria-current="page" to="/dashboard">dashboard</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/listservices">services</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-services">services</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/listclients">clients</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-clients">clients</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/listemployees">employees</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-employees">employees</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/listsales">sales</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-sales">sales</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/listemployees">employees</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-employees">employees</NavLink>
                                 </li>
                             </>
                         ):(
