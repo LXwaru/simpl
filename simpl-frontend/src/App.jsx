@@ -10,7 +10,7 @@ import ListClients from './components/ListClients'
 import ListEmployees from './components/ListEmployees'
 import ListSales from './components/ListSales'
 import ListAppointments from './components/ListAppointments'
-import ListServices from './components/ListServices'
+import ListServices from './components/services/ListServices'
 
 const App = () => {
 

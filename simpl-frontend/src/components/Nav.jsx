@@ -29,7 +29,7 @@ const Nav = () => {
         <>
             <nav className="navbar bg-body-tertiary fixed-top">
             <div className="container-fluid">
-                <NavLink className="navbar-brand" to="/">simpl business solutions [s | b | s ]</NavLink>
+                <NavLink className="navbar-brand" to="/">simpl business solutions [ s | b | s ]</NavLink>
                     {user ? (
                         <>
                             {user?.company?.name ? (
@@ -47,7 +47,7 @@ const Nav = () => {
                 </button>
                 <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div className="offcanvas-header">
-                    <h5 className="offcanvas-title" id="offcanvasNavbarLabel">[s | b | s] - welcome {user?.username || 'guest'}</h5>
+                    <h5 className="offcanvas-title" id="offcanvasNavbarLabel">[ s | b | s ] - welcome {user?.username || 'guest'}</h5>
                     <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div className="offcanvas-body">
