@@ -11,6 +11,10 @@ import ListEmployees from './components/ListEmployees'
 import ListSales from './components/ListSales'
 import ListAppointments from './components/ListAppointments'
 import ListServices from './components/services/ListServices'
+import CreateAppointment from './components/appointments/CreateAppointment'
+import CreateSale from './components/sales/CreateSale'
+import CreateService from './components/services/CreateService'
+import DetailService from './components/services/DetailService'
 
 const App = () => {
 
@@ -32,6 +36,10 @@ const App = () => {
           <Route path='/list-appointments' element={<ListAppointments />} /> 
           <Route path='/list-services' element={<ListServices />} /> 
           <Route path='/create-company' element={<CreateCompany />} />
+          <Route path='/create-appointment' element={<CreateAppointment />} />
+          <Route path='/create-sale' element={<CreateSale />} />
+          <Route path='/create-service' element={<CreateService />} />
+          <Route path='/detail-service/:id' element={<DetailService />} />
         </Routes>
       </div>
     </BrowserRouter>
