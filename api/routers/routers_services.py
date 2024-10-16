@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_services
@@ -22,7 +23,7 @@ def create_service(
     company_id: int,
     service: schemas.ServiceIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     db_service = crud_services.lookup_service_by_name(
         db, 
@@ -35,7 +36,6 @@ def create_service(
         db=db, 
         service=service, 
         company_id=company_id,
-        
     )
 
 

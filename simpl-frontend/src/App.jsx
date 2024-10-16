@@ -15,6 +15,7 @@ import CreateAppointment from './components/appointments/CreateAppointment'
 import CreateSale from './components/sales/CreateSale'
 import CreateService from './components/services/CreateService'
 import DetailService from './components/services/DetailService'
+import EditService from './components/services/EditService'
 
 const App = () => {
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route path='/create-sale' element={<CreateSale />} />
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
+          <Route path='/edit-service/:id' element={<EditService />} />
         </Routes>
       </div>
     </BrowserRouter>

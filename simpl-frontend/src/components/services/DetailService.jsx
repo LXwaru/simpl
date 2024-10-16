@@ -21,19 +21,18 @@ const DetailService = () => {
     return (
         <>
             <div className='form-control container-fluid'>
-                <h3>{service.title} - ${service.price}</h3>
+                <h3>{service.title} - ${service.price}
+                    
+                </h3>
+                    
                 <p>{service.description}</p>
-                <button className='btn btn-light'>
-                    <Link to='/create-sale'>purchase</Link>
-                </button> <br />
-                <button className='btn btn-light'>
-                    <Link to='/create-appointment'>reserve</Link> <br />
-                </button> <br />
-                <button className='btn btn-light'>
-                    <Link to='/list-services'>return to service list</Link>
-                </button>
+                <Link className='btn btn-success' to='/create-sale'>purchase</Link><br />
+                <Link className='btn btn-success' to='/create-appointment'>reserve</Link> <br />
+                <Link className='btn btn-warning'to='/edit-service'>edit service details</Link><br />
+                <Link className='btn btn-danger' to='/delete-service'>delete this service</Link>
 
             </div>
+            <Link to='/list-services'>return to service list</Link>
         </>
     )
 }

@@ -42,13 +42,6 @@ const ListServices = () => {
             <div className='container-fluid form-control'>
                 <h3>Services</h3>
                 <Link to='/create-service'>register a new service</Link>
-
-                <h5>click on the service title to:</h5>
-                <ul>
-                    <li>to purchase</li>
-                    <li>to reserve</li>
-                    <li>to see service details</li>
-                </ul>
                 <table className='table'>
                     <thead>
                         <tr>
