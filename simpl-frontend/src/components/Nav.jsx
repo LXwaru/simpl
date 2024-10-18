@@ -37,7 +37,7 @@ const Nav = () => {
                             ) : (
                                 <NavLink className='navbar-brand' to='/create-company'>register new company</NavLink>
                             )}
-                            <button className='navbar-brand' onClick={handleLogout}>logout</button>
+                            <NavLink className='navbar-brand' onClick={handleLogout}>logout</NavLink>
                         </>
                     ) : (
                         <NavLink className='navbar-brand' to='/login'>login or create account</NavLink>

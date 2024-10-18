@@ -72,7 +72,7 @@ def update_service(
     service_id: int,
     service_update: schemas.ServiceIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     service = crud_services.update_service(
         db=db, 

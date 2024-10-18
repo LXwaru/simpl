@@ -28,7 +28,7 @@ const DetailService = () => {
                 <p>{service.description}</p>
                 <Link className='btn btn-success' to='/create-sale'>purchase</Link><br />
                 <Link className='btn btn-success' to='/create-appointment'>reserve</Link> <br />
-                <Link className='btn btn-warning'to='/edit-service'>edit service details</Link><br />
+                <Link className='btn btn-warning' to={`/edit-service/${service.id}`}>edit service details</Link><br />
                 <Link className='btn btn-danger' to='/delete-service'>delete this service</Link>
 
             </div>

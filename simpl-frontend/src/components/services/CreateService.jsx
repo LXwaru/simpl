@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
-
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
+import { setUser, updateUser } from '../../features/user/userSlice'
 
 
 
@@ -14,8 +14,8 @@ const CreateService = () => {
     const [ price, setPrice ] = useState(0)
     const [ duration, setDuration ] = useState('')
     const [ description, setDescription ] = useState('')
-    const [ token, setToken ] = useState('')
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
     // useEffect(() => {
@@ -62,8 +62,13 @@ const CreateService = () => {
                 withCredentials: true,
             })
             alert('service successfully registered')
-            console.log("you finally did it you handsome son of a bitch")  
-            navigate('/list-services')
+            navigate('/list-services') 
+
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+
+            dispatch(updateUser(updatedUser))
         } catch (error){
             console.error("could not register service", error)
         }
