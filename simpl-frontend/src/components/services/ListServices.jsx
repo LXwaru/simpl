@@ -9,7 +9,7 @@ import axios from 'axios'
 const ListServices = () => {
 
     const user = useSelector((state) => state.user.value)
-    const company_id = useSelector((state) => state.user.value.company.id)    
+    const company_id = user.company.id  
     const services = user.company.services
     const activeServices = services.filter(service => service.is_enabled === true)
     const disabledServices = services.filter(service => service.is_enabled === false)

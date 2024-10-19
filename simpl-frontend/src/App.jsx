@@ -6,7 +6,7 @@ import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import CreateAccount from './components/CreateAccount'
 import CreateCompany from './components/CreateCompany'
-import ListClients from './components/ListClients'
+import ListClients from './components/clients/ListClients'
 import ListEmployees from './components/ListEmployees'
 import ListSales from './components/ListSales'
 import ListAppointments from './components/ListAppointments'
@@ -16,6 +16,8 @@ import CreateSale from './components/sales/CreateSale'
 import CreateService from './components/services/CreateService'
 import DetailService from './components/services/DetailService'
 import EditService from './components/services/EditService'
+import DetailClient from './components/clients/DetailClient'
+import CreateClient from './components/clients/CreateClient'
 
 const App = () => {
 
@@ -42,6 +44,8 @@ const App = () => {
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
           <Route path='/edit-service/:id' element={<EditService />} />
+          <Route path='/detail-service' element={<DetailClient />} />
+          <Route path='/create-client' element={<CreateClient />} />
         </Routes>
       </div>
     </BrowserRouter>
