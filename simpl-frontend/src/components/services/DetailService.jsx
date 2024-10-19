@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
-import { setUser, updateUser } from '../../features/user/userSlice'
+import { updateUser } from '../../features/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
 
 
@@ -12,8 +12,8 @@ const DetailService = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const user = useSelector((state) => state.user.value)
-    const company_id = useSelector((state) => state.user.value.company.id)    
-    const services = useSelector((state) => state.user.value.company.services)
+    const company_id = user.company.id
+    const services = user.company.services
     
     if (!services) {
         return <div>Loading services...</div>

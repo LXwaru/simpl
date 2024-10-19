@@ -25,7 +25,7 @@ const ListClients = () => {
                             <tr key={client.id}>
                                 <td>{client.full_name}</td>
                                 <td><Link to={`mailto:${client.email}`}>{client.email}</Link></td>
-                                <td><Link to={`/details-client`}>see client details...</Link></td>
+                                <td><Link to={`/detail-client/${client.id}`}>see client details...</Link></td>
                             </tr>
                         ))}
                     </tbody>

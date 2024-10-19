@@ -44,7 +44,7 @@ const App = () => {
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
           <Route path='/edit-service/:id' element={<EditService />} />
-          <Route path='/detail-service' element={<DetailClient />} />
+          <Route path='/detail-client/:id' element={<DetailClient />} />
           <Route path='/create-client' element={<CreateClient />} />
         </Routes>
       </div>
