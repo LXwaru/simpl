@@ -90,7 +90,7 @@ def toggle_service_status(
     company_id: int,
     service_id: int,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     service = crud_services.toggle_activation(
         db=db, 
@@ -107,6 +107,6 @@ def delete_service(
     company_id: int,
     service_id: int,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     return crud_services.delete_service(db, service_id, company_id=company_id)
