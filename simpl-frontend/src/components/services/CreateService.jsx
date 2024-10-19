@@ -5,9 +5,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setUser, updateUser } from '../../features/user/userSlice'
 
 
-
-
-
 const CreateService = () => {
     const company_id = useSelector((state) => state.user.value.company.id) 
     const [ title, setTitle ] = useState('')
@@ -16,37 +13,11 @@ const CreateService = () => {
     const [ description, setDescription ] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const handleTitleChange = (e) => {setTitle(e.target.value)} 
+    const handlePriceChange = (e) => {setPrice(e.target.value)}
+    const handleDurationChange = (e) => {setDuration(`PT${e.target.value}M`)}
+    const handleDescriptionChange = (e) => {setDescription(e.target.value)}      
 
-
-    // useEffect(() => {
-    //     const getToken = async () => {
-    //         try {
-    //             const tokenResponse = await axios.get('http://localhost:8000/token')
-    //             console.log(tokenResponse)
-    //         } catch (error) {
-    //             console.error('could not get access token', error)
-    //         }
-    //     }
-    //     getToken()
-    // }, [])
-
-    
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value)      
-    } 
-
-    const handlePriceChange = (e) => {
-        setPrice(e.target.value)
-
-    } 
-
-    const handleDurationChange = (e) => {
-        setDuration(`PT${e.target.value}M`)
-    } 
-
-    const handleDescriptionChange = (e) => {
-        setDescription(e.target.value)
-    } 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -63,7 +34,6 @@ const CreateService = () => {
             })
             alert('service successfully registered')
             navigate('/list-services') 
-
             const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
                 withCredentials: true
             })
@@ -72,8 +42,7 @@ const CreateService = () => {
         } catch (error){
             console.error("could not register service", error)
         }
-    } 
-
+    }
 
 
     return (

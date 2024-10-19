@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_clients
@@ -17,12 +18,12 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 
-@router.post('/api/clients/{company_id}', response_model=schemas.ClientOut)
+@router.post('/api/clients/{company_id}/', response_model=schemas.ClientOut)
 def create_client(
     company_id: int,
     client: schemas.ClientIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     duplicate = crud_clients.client_duplicate_check(db, email=client.email, company_id=company_id)
     if duplicate:
