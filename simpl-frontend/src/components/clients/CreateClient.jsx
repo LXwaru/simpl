@@ -28,7 +28,7 @@ const CreateClient = () => {
                 withCredentials: true
             })
             alert('client successfully registered')
-            navigate('/detail-client')
+            navigate('/list-clients')
             const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
                 withCredentials: true
             })

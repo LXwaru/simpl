@@ -32,7 +32,7 @@ def create_sale(
         company_id: int,
         sale: schemas.SaleIn 
 ) -> schemas.SaleOut:
-
+    
     # get a list of services
     service_items = []
     amount_due = 0
@@ -99,31 +99,6 @@ def get_sale(
     if sale is None:
         return None
     
-    return sale
-
-
-def deem_sale_paid(
-        db: Session,
-        company_id: int,
-        sale_id: int
-):
-    sale = db.query(models.Sale).filter(
-        models.Sale.id == sale_id,
-        models.Sale.company_id == company_id
-    ).one_or_none()
-    
-    if sale is None:
-        return None
-
-    sale.is_paid = True
-
-    db.query(models.ServiceItem).filter(
-        models.ServiceItem.sale_id == sale_id,
-    ).update({'is_active': True})
-
-    
-    db.commit()
-    db.refresh(sale)
     return sale
 
 

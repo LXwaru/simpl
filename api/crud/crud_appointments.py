@@ -26,14 +26,14 @@ def create_new_appointment(
         raise HTTPException(status_code=404, detail='client not found')
     
 
-    has_credit = any(
+    paid = any(
         credit.service_id == appointment.service_id and 
-        credit.is_active and not credit.is_redeemed
+        not credit.is_redeemed
         for credit in client.credits
     )
 
-    if has_credit:
-        db_appointment.is_paid = True
+    if paid:
+        db_appointment.has_credit = True
 
 
     db.add(db_appointment)
@@ -133,7 +133,6 @@ def checkout_appointment(
     if service_item is None:
         raise HTTPException(status_code=401, detail='no credit on file')
     
-    service_item.is_active = False
     service_item.is_redeemed = True
     service_item.completed_on = datetime.now()
     

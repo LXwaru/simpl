@@ -16,7 +16,7 @@ class AppointmentOut(AppointmentIn):
     id: int
     company_id: int
     is_confirmed: bool
-    is_paid: bool
+    has_credit: bool
     is_complete: bool
 
     class Config:
@@ -50,9 +50,9 @@ class ServiceItemOut(ServiceItemIn):
     id: int
     service_title: str
     price: int
-    is_active: bool
     is_redeemed: bool
     completed_on: Optional[datetime] = None
+    sale_id: int
 
     class Config:
         from_attributes = True
@@ -72,7 +72,6 @@ class SaleOut(BaseModel):
     client_id: int
     client_name: str
     total_due: int
-    is_paid: bool
     service_items: List[ServiceItemOut]
 
     class Config:
@@ -90,6 +89,7 @@ class ClientOut(ClientIn):
     company_id: int
     credits: list[ServiceItemOut] = []
     appointments: list[AppointmentOut] = []
+    sales: list[SaleOut] = []
 
     class Config:
         from_attributes = True

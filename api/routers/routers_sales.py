@@ -62,20 +62,6 @@ def get_sale(
     return sale
 
 
-@router.put('/api/{company_id}/sale_paid/{sale_id}', response_model=schemas.SaleOut)
-def deem_sale_paid(
-    company_id: int,
-    sale_id: int,
-    db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
-):
-    sale = crud_sales.deem_sale_paid(
-        db=db, company_id=company_id, sale_id=sale_id)
-    if sale is None:
-        raise HTTPException(status_code=404, detail='sale not found')
-    return sale
-
-
 @router.delete('/api/{company_id}/sale/{sale_id}')
 def delete_sale(
     company_id: int,

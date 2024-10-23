@@ -114,7 +114,6 @@ class ServiceItem(Base):
     client_id = Column(Integer, ForeignKey('clients.id'))
     sale = relationship('Sale', back_populates='service_items')
     client = relationship('Client', back_populates='credits')
-
     service = relationship("Service", back_populates='service_items')
 
 
@@ -125,17 +124,15 @@ class Sale(Base):
     id = Column(Integer, primary_key=True)
     company_id = Column(Integer, ForeignKey('companies.id'))
     company_name = Column(String, index=True)
-    date = Column(TIMESTAMP(timezone=True), default=utc_now)
+    date = Column(TIMESTAMP(timezone=True))
     client_id = Column(Integer, ForeignKey("clients.id"))
     client_name = Column(String, index=True)
     total_due = Column(Numeric, index=True)
-    is_paid = Column(Boolean, default=False)
     service_items: Mapped[List["ServiceItem"]] = relationship(back_populates='sale')
 
     company = relationship("Company", back_populates="sales")
     client = relationship("Client", back_populates="sales")
     
-
 
 class Appointment(Base):
     __tablename__ = "appointments"
@@ -146,7 +143,7 @@ class Appointment(Base):
     service_id = Column(Integer, ForeignKey('services.id'))
     start_time = Column(DateTime, index=True)
     is_confirmed = Column(Boolean, default=False)
-    is_paid = Column(Boolean, default=False)
+    has_credit = Column(Boolean, default=False)
     is_complete = Column(Boolean, default=False)
 
     company_id = Column(Integer, ForeignKey('companies.id'))

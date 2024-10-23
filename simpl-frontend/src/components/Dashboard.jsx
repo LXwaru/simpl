@@ -40,8 +40,10 @@ const Dashboard = () => {
     return (
         <>
             {user.company ? (
-                <h3>{user.company.name}</h3>
-
+                <div>
+                    <h3>{user.company.name}</h3>
+                    <p>{user.company.description}</p>
+                </div>
             ) : (
                 <h3>{user.username}</h3>
             )}
