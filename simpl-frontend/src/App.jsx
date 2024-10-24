@@ -18,6 +18,8 @@ import DetailService from './components/services/DetailService'
 import EditService from './components/services/EditService'
 import DetailClient from './components/clients/DetailClient'
 import CreateClient from './components/clients/CreateClient'
+import UpdateClient from './components/clients/UpdateClient'
+import Weather from './components/Weather'
 
 const App = () => {
 
@@ -27,6 +29,7 @@ const App = () => {
       </nav>
     <BrowserRouter>
       <Nav />
+      {/* <Weather /> */}
       <div>
         <Routes>
           <Route path='/' element={<Home />} />
@@ -46,6 +49,7 @@ const App = () => {
           <Route path='/edit-service/:id' element={<EditService />} />
           <Route path='/detail-client/:id' element={<DetailClient />} />
           <Route path='/create-client' element={<CreateClient />} />
+          <Route path='/update-client/:id' element={<UpdateClient />} />
         </Routes>
       </div>
     </BrowserRouter>

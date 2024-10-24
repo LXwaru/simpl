@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+import { useState } from 'react'
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateUser } from '../../features/user/userSlice'
@@ -38,15 +39,13 @@ const DetailClient = () => {
             return 'upcoming'
         }
     }
-
     const isCompleteStatus = (completeStatus) => {
         if (completeStatus === true) {
             return "complete"
         } else {
             return 'incomplete'
         }
-}
-    
+    }
     const getServiceName = (serviceId) => {
         const service = services.find((service) => service.id === serviceId)
         return service.title
@@ -77,7 +76,7 @@ const DetailClient = () => {
         // for short date format
         const formattedDate = `${month}/${day}/${year}`
         const formattedTime = `${hours}:${minutes}${ampm}`
-        return `${dayOfWeek} - ${formattedDate} - ${formattedTime}`
+        return `${dayOfWeek}, ${formattedDate} at ${formattedTime}`
     }
     // for sale data
     const getSaleDate = (saleId) => {
@@ -143,19 +142,29 @@ const DetailClient = () => {
     return (
         <>
             <div className='container-fluid form-control'>
-                <h3>client details</h3><hr />
-                <p><strong>client name: </strong>{client.full_name}</p>
-                <p><strong>client email: </strong><Link to={`mailto:${client.email}`}>{client.email}</Link></p>
+                <div className='form-control'>
 
+                    <hr /><h3>client details</h3><hr />
+                    <h6><strong>client name: </strong>{client.full_name}<br />
+                    <strong>client email: </strong><Link to={`mailto:${client.email}`}>{client.email}</Link><br />
+                    <hr />
+                    <Link to={`/update-client/${id}`}>update client information
+                    </Link>
+                    </h6>
+                </div>
                 <div className="accordion" id="credits">
                     <div className="accordion-item">
                         <h2 className="accordion-header">
                         <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#activeCredits" aria-expanded="true" aria-controls="activeCredits">
-                        <p><strong>credits: </strong><hr />active-{activeCredits.length}, redeemed-{redeemedCredits.length} </p>
+                            credits:
                         </button>
                         </h2>
                         <div id="activeCredits" className="accordion-collapse collapse" data-bs-parent="#credits">
                             <div className="accordion-body">
+                                <h5 className='form-control'><strong><hr />
+                                total credits: {credits.length} <hr /> </strong>
+                                active credits: {activeCredits.length} <br /> 
+                                redeemed credits: {redeemedCredits.length} <hr /></h5>
                                 <table className='table'>
                                     <thead>
                                         <tr>
@@ -182,12 +191,18 @@ const DetailClient = () => {
                     <div className="accordion-item">
                         <h2 className="accordion-header">
                         <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                            <p><strong>appointments: </strong><hr />scheduled-{upcomingAppointments.length}, past-{pastAppointments.length} </p>
+                            appointments: 
                         </button>
                         </h2>
                         <div id="collapseFour" className="accordion-collapse collapse" data-bs-parent="#credits">
                             <div className="accordion-body">
-                                <h6 className='form-control'>current date/time: {formatDateTime(new Date())}</h6>
+                                <h5 className='form-control'><hr /><strong>current date/time:</strong> {formatDateTime(new Date())}
+                                <hr />
+                                <strong>total appointments: </strong>{appointments.length} <br />
+                                upcoming appointments: {upcomingAppointments.length}<br />
+                                past appointments: {pastAppointments.length}
+                                <hr />
+                                </h5>
                                 <table className='table'>
                                     <thead>
                                         <tr>
@@ -222,14 +237,16 @@ const DetailClient = () => {
                     <div className="accordion-item">
                         <h2 className="accordion-header">
                         <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                            <p><strong>sales history</strong><hr />total sales-{clientSales.length}</p>
+                            sales history:
                         </button>
                         </h2>
                         <div id="collapseFive" className="accordion-collapse collapse" data-bs-parent="#credits">
                             <div className="accordion-body">
+                                <h5 className='form-control'><hr />total sales: {clientSales.length}<hr /></h5>
                                 <table className='table'>
                                     <thead>
                                         <tr>
+                                            <td>sale ID</td>
                                             <td>date/time</td>
                                             <td>services</td>
                                             <td>total</td>
@@ -238,6 +255,7 @@ const DetailClient = () => {
                                     <tbody>
                                         {clientSales.map((sale) => (
                                         <tr key={sale.id}>
+                                            <td>{sale.id}</td>
                                             <td>{getSaleDate(sale.id)}</td>
                                             <td>
                                             {sale.service_items.map((service_item) => (

@@ -57,7 +57,7 @@ def edit_client_info(
     client_id: int,
     client_info: schemas.ClientIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     return crud_clients.edit_client_info(
         db=db,
