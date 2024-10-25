@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_employees
@@ -22,7 +23,7 @@ def create_employee(
     company_id: int,
     employee: schemas.EmployeeIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     db_employee = crud_employees.get_employee_by_email(db, email=employee.email)
     if db_employee:

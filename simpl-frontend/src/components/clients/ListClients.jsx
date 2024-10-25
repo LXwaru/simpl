@@ -16,8 +16,8 @@ const ListClients = () => {
                 <table className='table'>
                     <thead>
                         <tr>
-                            <td>client name</td>
-                            <td>client email</td>
+                            <th>client name</th>
+                            <th>client email</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,7 +29,6 @@ const ListClients = () => {
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
             </div>
         </>
