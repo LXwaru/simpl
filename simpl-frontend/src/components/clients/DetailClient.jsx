@@ -144,8 +144,8 @@ const DetailClient = () => {
             <div className='container-fluid form-control'>
                 <div className='form-control'>
 
-                    <hr /><h3>client details</h3><hr />
-                    <h6><strong>client name: </strong>{client.full_name}<br />
+                    <hr /><h3>{client.full_name}</h3><hr />
+                    <h6>
                     <strong>client email: </strong><Link to={`mailto:${client.email}`}>{client.email}</Link><br />
                     <hr />
                     <Link to={`/update-client/${id}`}>update client information
