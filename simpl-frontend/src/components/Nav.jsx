@@ -67,10 +67,13 @@ const Nav = () => {
                                     <NavLink className="nav-link active" aria-current="page" to="/list-employees">employees</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/list-sales">sales</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/create-sales">register a sale</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/list-employees">employees</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/create-appointment">make an appointment</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link active" aria-current="page" to="/list-reports">reports</NavLink>
                                 </li>
                             </>
                         ):(

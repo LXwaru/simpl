@@ -10,6 +10,7 @@ import ListClients from './components/clients/ListClients'
 import ListEmployees from './components/employees/ListEmployees'
 import DetailEmployee from './components/employees/DetailEmployee'
 import CreateEmployee from './components/employees/CreateEmployee'
+import UpdateEmployee from './components/employees/UpdateEmployee'
 import ListSales from './components/sales/ListSales'
 import ListAppointments from './components/appointments/ListAppointments'
 import ListServices from './components/services/ListServices'
@@ -21,6 +22,7 @@ import EditService from './components/services/EditService'
 import DetailClient from './components/clients/DetailClient'
 import CreateClient from './components/clients/CreateClient'
 import UpdateClient from './components/clients/UpdateClient'
+import ListReports from './components/reports/ListReports'
 import Weather from './components/Weather'
 
 const App = () => {
@@ -42,6 +44,7 @@ const App = () => {
           <Route path='/list-employees' element={<ListEmployees />} /> 
           <Route path='/detail-employee/:id' element={<DetailEmployee />} />
           <Route path='/create-employee' element={<CreateEmployee />} />
+          <Route path='/update-employee/:id' element={<UpdateEmployee />} />
           <Route path='/list-sales' element={<ListSales />} /> 
           <Route path='/list-appointments' element={<ListAppointments />} /> 
           <Route path='/list-services' element={<ListServices />} /> 
@@ -54,6 +57,7 @@ const App = () => {
           <Route path='/detail-client/:id' element={<DetailClient />} />
           <Route path='/create-client' element={<CreateClient />} />
           <Route path='/update-client/:id' element={<UpdateClient />} />
+          <Route path='/list-reports' element={<ListReports />} />
         </Routes>
       </div>
     </BrowserRouter>

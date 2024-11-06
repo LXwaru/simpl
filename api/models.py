@@ -11,19 +11,6 @@ def utc_now():
     return datetime.now(pytz.utc)
 
 
-# sale_service_association = Table(
-#     'sale_service', Base.metadata,
-#     Column('sale_id', Integer, ForeignKey('sales.id')),
-#     Column('sale_item_id', Integer, ForeignKey('sale_items.id'))
-# )
-
-# class SaleServiceAssociation(Base):
-#     __tablename__ = 'sale_service_association'
-#     sale_id: Mapped[int] = mapped_column(ForeignKey('sales.id'), primary_key=True)
-#     sale_item_id: Mapped[int] = mapped_column(ForeignKey('sale_items.id'))
-#     sale_item: Mapped['SaleItem'] = relationship()
-
-
 class Company(Base):
     __tablename__ = "companies"
 
@@ -38,6 +25,12 @@ class Company(Base):
     services = relationship("Service", back_populates="company", cascade="all, delete")
     sales = relationship("Sale", back_populates='company', cascade='all, delete')
     appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
+
+
+# class Schedule(Base):
+#     __tablename__ = "schedules"
+#     id = Column(Integer, primary_key=True)
+#     day = Column(b)
 
 
 class Employee(Base):

@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_appointments
@@ -22,7 +23,7 @@ def create_new_appointment(
     company_id: int,
     appointment: schemas.AppointmentIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     appointment = crud_appointments.create_new_appointment(
         db=db, 

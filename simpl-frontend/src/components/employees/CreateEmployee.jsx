@@ -45,7 +45,7 @@ const CreateEmployee = () => {
             <div className='form-control'>
                 <h3>register a new employee</h3>
                 <form onSubmit={handleSubmit}>
-                <div className="form-floating mb-3">
+                    <div className="form-floating mb-3">
                         {/* full_name */}
                         <input onChange={handleNameChange} type="text" className="form-control" id="name" placeholder="name" />
                         <label htmlFor="name">full name</label>
