@@ -96,9 +96,9 @@ const DetailEmployee = () => {
 
     return(
         <>
-            <h3>{employee.full_name}</h3>
-            <Link to={`/update-employee/${id}`}>manage schedule</Link>
             <div className='form-control'>
+            <h3>{employee.full_name}</h3>
+            <Link to={`/update-employee/${id}`}>update employee information</Link>
                 <h3>upcoming appointments</h3>
                 <table className='table'>
                     <thead>

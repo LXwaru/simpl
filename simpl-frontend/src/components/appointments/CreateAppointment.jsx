@@ -67,31 +67,31 @@ const CreateAppointment = () => {
                         aria-label="Small select example"
                         defaultValue=''
                     >
-                    <option value='' disabled>select a client</option>
+                        <option value='' disabled>select a client</option>
                     {clients.map((client) => (
                         <option key={client.id} value={client.id}>{client.full_name}</option>
                     ))}
                     </select>
-                    {services.map((service) => (
                     <select 
-                    key={service.id}
                     onChange={handleServiceChange}
                     className="form-select form-select-sm" 
-                    aria-label="Small select example">
-                        <option defaultValue>Service</option>
-                        <option value={service.id}>{service.title}</option>
-                    </select>
+                    aria-label="Small select example"
+                    defaultValue=''>
+                        <option value='' disabled>select a service</option>
+                    {services.map((service) => (
+                        <option key={service.id} value={service.id}>{service.title}</option>
                     ))}
-                    {employees.map((employee) => (
-                    <select 
-                    key={employee.id}
+                    </select>
+                    <select
                     onChange={handleEmployeeChange}
                     className="form-select form-select-sm" 
-                    aria-label="Small select example">
-                        <option defaultValue>Employee</option>
-                        <option value={employee.id}>{employee.full_name}</option>
-                    </select>
+                    aria-label="Small select example"
+                    defaultValue=''>
+                        <option value='' disabled>select an employee</option>
+                    {employees.map((employee) => (
+                        <option key={employee.id} value={employee.id}>{employee.full_name}</option>
                     ))}
+                    </select>
                     <h5>choose a date and time</h5>
                     <Flatpickr
                     placeholder='click here'
