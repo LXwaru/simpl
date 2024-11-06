@@ -1,11 +1,14 @@
 import Calendar from '../Calender'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { updateUser } from '../../features/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const DetailEmployee = () => {
     const {id} = useParams()
     const user = useSelector((state) => state.user.value)
+    const companyId = user.company.id
     const employees = user.company.employees
     const employee = employees.find((employee) => employee.id === parseInt(id, 10))
     const rightNow = new Date()
@@ -16,6 +19,7 @@ const DetailEmployee = () => {
         new Date(appointment.start_time) < rightNow) 
     const clients = user.company.clients
     const services = user.company.services
+    const dispatch = useDispatch()
 
     const getClientName = (clientId) => {
         const client = clients.find((client) => client.id === clientId)
@@ -57,9 +61,39 @@ const DetailEmployee = () => {
         } else {
             return <em>not checked out</em>
         }
+    }
 
+    const confirmAppointment = async (eventId) => {
+        try {
+            await axios.put(`http://localhost:8000/api/${companyId}/appointment_confirm/${eventId}`, {
+                withCredentials: true
+            })
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+
+            dispatch(updateUser(updatedUser))
+        } catch (error) {
+            console.error('could not confirm appointment', error)
+        }
     }
     
+    const deleteAppointment = async (eventId) => {
+        try {
+            await axios.delete(`http://localhost:8000/api/${companyId}/appointment/${eventId}`, {
+                withCredentials: true
+            })
+            alert('successfully deleted appointment')
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+
+            dispatch(updateUser(updatedUser))
+        } catch (error) {
+            console.error('could not delete appointment', error)
+        }
+    } 
+
     return(
         <>
             <h3>{employee.full_name}</h3>
@@ -72,14 +106,32 @@ const DetailEmployee = () => {
                             <th>date/time</th>
                             <th>service</th>
                             <th>client</th>
+                            <th>confirm</th>
+                            <th>cancel appointment</th>
                         </tr>
                     </thead>
                     <tbody>
-                {upcomingAppointments.map((appointment) => (
+                {upcomingAppointments
+                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+                .map((appointment) => (
                     <tr key={appointment.id}>
                         <td>{formatDateTime(appointment.start_time)}</td>
                         <td>{getServiceName(appointment.service_id)}</td>
                         <td>{getClientName(appointment.client_id)}</td>
+                        {appointment.is_confirmed ? (
+                            <>
+                            <td>
+                            <Link onClick={()=>confirmAppointment(appointment.id)} >unconfirm</Link>
+                            </td>
+                            </>
+                        ) : (
+                        <td>
+                            <Link onClick={()=>confirmAppointment(appointment.id)} >confirm</Link>
+                        </td>
+                        )}
+                        <td>
+                            <Link onClick={()=>deleteAppointment(appointment.id)} >cancel</Link>
+                        </td>
                     </tr>
                 ))}
                         

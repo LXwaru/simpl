@@ -273,6 +273,7 @@ const DetailClient = () => {
                         </div>
                     </div>
                 </div>
+                <Link to='/list-clients'>back to client list</Link>
             </div>
         </>
     )

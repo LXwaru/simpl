@@ -88,7 +88,7 @@ def toggle_confirm_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     appointment = crud_appointments.toggle_confirm_appointment(
         db=db,
@@ -122,7 +122,7 @@ def delete_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     appointment = crud_appointments.delete_appointment(
         db=db, 
