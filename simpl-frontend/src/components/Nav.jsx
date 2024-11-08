@@ -67,7 +67,7 @@ const Nav = () => {
                                     <NavLink className="nav-link active" aria-current="page" to="/list-employees">employees</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link active" aria-current="page" to="/create-sales">register a sale</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/create-sale">register a sale</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link active" aria-current="page" to="/create-appointment">make an appointment</NavLink>

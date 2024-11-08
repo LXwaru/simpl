@@ -32,6 +32,10 @@ const CreateAppointment = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!clientId || !serviceId || !employeeId || !date) {
+            alert('client, service, employee AND date must be selected')
+            return
+        }
         try {
             const payload = {
                 client_id: clientId,

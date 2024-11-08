@@ -12,10 +12,11 @@ import DetailEmployee from './components/employees/DetailEmployee'
 import CreateEmployee from './components/employees/CreateEmployee'
 import UpdateEmployee from './components/employees/UpdateEmployee'
 import ListSales from './components/sales/ListSales'
+import DetailSale from './components/sales/DetailSale'
+import CreateSale from './components/sales/CreateSale'
 import ListAppointments from './components/appointments/ListAppointments'
 import ListServices from './components/services/ListServices'
 import CreateAppointment from './components/appointments/CreateAppointment'
-import CreateSale from './components/sales/CreateSale'
 import CreateService from './components/services/CreateService'
 import DetailService from './components/services/DetailService'
 import EditService from './components/services/EditService'
@@ -46,11 +47,12 @@ const App = () => {
           <Route path='/create-employee' element={<CreateEmployee />} />
           <Route path='/update-employee/:id' element={<UpdateEmployee />} />
           <Route path='/list-sales' element={<ListSales />} /> 
+          <Route path='/create-sale' element={<CreateSale />} />
+          <Route path='/detail-sale/:id' element={<DetailSale />} />
           <Route path='/list-appointments' element={<ListAppointments />} /> 
           <Route path='/list-services' element={<ListServices />} /> 
           <Route path='/create-company' element={<CreateCompany />} />
           <Route path='/create-appointment' element={<CreateAppointment />} />
-          <Route path='/create-sale' element={<CreateSale />} />
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
           <Route path='/edit-service/:id' element={<EditService />} />

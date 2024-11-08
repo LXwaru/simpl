@@ -22,8 +22,8 @@ const store = configureStore({
     devTools: process.env.NODE_ENV !== 'production',
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            serializableCheck: false, // This avoids errors with non-serializable data in the state
-        }).concat(thunk), // Adds thunk middleware
+            serializableCheck: false, 
+        }).concat(thunk), 
 });
 
 export const persistor = persistStore(store);
