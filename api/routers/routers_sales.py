@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_sales
@@ -22,7 +23,7 @@ def create_new_sale(
     company_id: int,
     sale: schemas.SaleIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     return crud_sales.create_sale(
         db=db,
