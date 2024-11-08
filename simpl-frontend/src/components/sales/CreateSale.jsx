@@ -24,6 +24,11 @@ const CreateSale = () => {
         setServiceIds([])
     }
 
+    const displayServiceName = (id) => {
+        const service = services.find((service) => service.id === parseInt(id, 10))
+        return service.title
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -32,7 +37,6 @@ const CreateSale = () => {
             return
         }
         try {
-
             const payload = {
                 client_id: clientId,
                 service_ids: serviceIds
@@ -46,7 +50,6 @@ const CreateSale = () => {
                 withCredentials: true
             })
             dispatch(updateUser(updatedUser))
-
         } catch (error) {
             console.error('could not register sale', error)
         }
@@ -91,7 +94,7 @@ const CreateSale = () => {
                     </h5>
                         {serviceIds.map((serviceId) => (
                     <ul className='list-group' key={serviceId}>
-                        <li className='list-group-item'>{serviceId}</li>
+                        <li className='list-group-item'>{displayServiceName(serviceId)}</li>
                     </ul>
                         ))}
                     <button 
