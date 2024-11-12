@@ -1,8 +1,6 @@
-import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { updateUser } from '../../features/user/userSlice'
-import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useState } from 'react'
 
 const ListSales = () => {
     const user = useSelector((state) => state.user.value)
@@ -11,18 +9,19 @@ const ListSales = () => {
     const [ dateFilterValue, setDateFilterValue ] = useState('')
 
 
-    const formatDateTime = (date) => {
-        const formattedDate = new Date(date)
-        const month = String(formattedDate.getMonth() + 1).padStart(2, '0')
-        const day = String(formattedDate.getDate()).padStart(2, '0')
-        const year = formattedDate.getFullYear()
-        const hours = String(formattedDate.getHours()).padStart(2, '0')
-        const minutes = String(formattedDate.getMinutes()).padStart(2, '0')
-        return `${month}/${day}/${year}, ${hours}:${minutes}`
-    }
+const formatDateTime = (date) => {
+    const formattedDate = new Date(date)
+    const month = String(formattedDate.getMonth() + 1).padStart(2, '0')
+    const day = String(formattedDate.getDate()).padStart(2, '0')
+    const year = formattedDate.getFullYear()
+    const hours = String(formattedDate.getHours()).padStart(2, '0')
+    const minutes = String(formattedDate.getMinutes()).padStart(2, '0')
+    return `${month}/${day}/${year}, ${hours}:${minutes}`
+}
 
 
     const nameFilter = sales.filter((sale) => sale.client_name.toLowerCase().includes(nameFilterValue.toLowerCase()))
+    
     const nameDateFilter = nameFilter.filter((sale) => {
         const formattedSaleDate = formatDateTime(sale.date)
         return formattedSaleDate.includes(dateFilterValue)

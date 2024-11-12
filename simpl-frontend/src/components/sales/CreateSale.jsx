@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateUser } from '../../features/user/userSlice'
 import { useNavigate, Link } from 'react-router-dom'
@@ -13,13 +13,14 @@ const CreateSale = () => {
     const services = user.company.services 
     const [ clientId, setClientId ] = useState(0)
     const [ serviceIds, setServiceIds ] = useState([])
+    const [ totalDue, setTotalDue ] = useState(0)
     
     
     const handleClientChange = (e) => setClientId(e.target.value)
     const addToServiceList = (id) => {
         setServiceIds((prevServiceIds) => [...prevServiceIds, id])
-        console.log([...serviceIds, id])
     }
+
     const clearServiceIds = () => {
         setServiceIds([])
     }
@@ -28,6 +29,19 @@ const CreateSale = () => {
         const service = services.find((service) => service.id === parseInt(id, 10))
         return service.title
     }
+
+    useEffect(() => {
+        const getTotalAmount = () => {
+            let amount = 0
+            for (let id of serviceIds) {
+                let service = services.find((service) => service.id === parseInt(id, 10))
+                amount += service.price
+            
+            }
+            setTotalDue(amount)
+        } 
+        getTotalAmount()
+    }, [serviceIds])
 
 
     const handleSubmit = async (e) => {
@@ -70,6 +84,7 @@ const CreateSale = () => {
                             <option key={client.id} value={client.id}>{client.full_name}</option>
                         ))}
                     </select>
+                    <hr />
                     <table className='table'>
                         <thead>
                             <tr>
@@ -85,6 +100,7 @@ const CreateSale = () => {
                             ))}
                         </tbody>
                     </table>
+                    <h3>sale summary</h3><hr />
                     <h5>
                         selected services <br />
                         <button 
@@ -97,6 +113,7 @@ const CreateSale = () => {
                         <li className='list-group-item'>{displayServiceName(serviceId)}</li>
                     </ul>
                         ))}
+                    <h3>total amount due: ${totalDue}</h3>
                     <button 
                     type='submit'
                     className='btn btn-primary'

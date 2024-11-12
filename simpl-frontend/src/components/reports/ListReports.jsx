@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom'
 
 
+
+// what reports are needed?
+// filterable sales, filterable appointments, payroll (employee rates per service 
+// needs to be setup), 
 const ListReports = () => {
     return (
         <>
