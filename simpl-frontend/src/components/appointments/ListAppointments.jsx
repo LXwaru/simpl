@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const ListAppointments = () => {
     const [ clientValue, setClientValue ] = useState('')
@@ -11,72 +11,17 @@ const ListAppointments = () => {
     const clients = user.company.clients
     const services = user.company.services
     const employees = user.company.employees 
+    const todayDateTime = new Date()
     const appointments = user.company.appointments
-    const rightNow = new Date()
-    const upcomingAppointments = appointments.filter((appointment) => appointment.start_time > rightNow)
-    const pastAppointments = appointments.filter((appointment) => appointment.start_time < rightNow)
+    // const upcomingAppointments = appointments.filter((appointment) => appointment.start_time > rightNow)
+    // const pastAppointments = appointments.filter((appointment) => appointment.start_time < rightNow)
+    const [ whichAppointments, setWhichAppointments ] = useState([])
 
-    const allAppointmentList = () => {
-        return (
-            <>            
-            <tbody>
-                    {dateFilter.map(appointment => (
-                        <tr key={appointment.id}>
-                            <td>{formattedDateTime(appointment.start_time)}</td>
-                            <td>{getClientName(appointment.client_id)}</td>
-                            <td>{getServiceName(appointment.service_id)}</td>
-                            <td>{getEmployeeName(appointment.employee_id)}</td>
-                            <td>{confirmStatus(appointment.is_confirmed)}</td>
-                            <td>{checkoutStatus(appointment.is_complete)}</td>
-                        </tr>
-                    )).reverse()}
-            </tbody>
-            </>
-        )
-    }
-    
-    const upcomingAppointmentList = () => {
-        return (
-            <>
-                <tbody>
-                    {dateFilter.map(appointment => (
-                        <tr key={appointment.id}>
-                            <td>{formattedDateTime(appointment.start_time)}</td>
-                            <td>{getClientName(appointment.client_id)}</td>
-                            <td>{getServiceName(appointment.service_id)}</td>
-                            <td>{getEmployeeName(appointment.employee_id)}</td>
-                            <td>{confirmStatus(appointment.is_confirmed)}</td>
-                            <td>{checkoutStatus(appointment.is_complete)}</td>
-                        </tr>
-                    )).reverse()}
-                </tbody>
-            </>
-        )
-    }
-
-    const pastAppointmentList = () => {
-        return (
-            <>
-                <tbody>
-                    {dateFilter.map(appointment => (
-                        <tr key={appointment.id}>
-                            <td>{formattedDateTime(appointment.start_time)}</td>
-                            <td>{getClientName(appointment.client_id)}</td>
-                            <td>{getServiceName(appointment.service_id)}</td>
-                            <td>{getEmployeeName(appointment.employee_id)}</td>
-                            <td>{confirmStatus(appointment.is_confirmed)}</td>
-                            <td>{checkoutStatus(appointment.is_complete)}</td>
-                        </tr>
-                    )).reverse()}
-                </tbody>
-            </>
-        )
-    }
 
     const formattedDateTime = (dateTime) => {
         const date = new Date(dateTime)
 
-        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
         const dayOfWeek = daysOfWeek[date.getDay()];
 
         // in short date format
@@ -94,11 +39,23 @@ const ListAppointments = () => {
         // for short date format
         const formattedDate = `${month}/${day}/${year}`
         const formattedTime = `${hours}:${minutes}${ampm}`
-        return `${dayOfWeek}, ${formattedDate} at ${formattedTime}`
+        return `${formattedDate} - ${formattedTime}`
     }
 
-    
-    
+    const showAllAppointments = () => {setWhichAppointments(appointments)}
+
+    const showUpcomingAppointments = () => {
+        const rightNow = new Date()
+        const upcoming = appointments.filter((appointment) => new Date(appointment.start_time )> rightNow)
+        setWhichAppointments(upcoming)
+    }
+    const showPastAppointments = () => {
+        const rightNow = new Date()
+        const past = appointments.filter((appointment) => new Date(appointment.start_time) < rightNow)
+        setWhichAppointments(past)
+    }
+
+
     const getClientName = (id) => {
         const client = clients.find(client => client.id === id)
         return client.full_name
@@ -127,10 +84,9 @@ const ListAppointments = () => {
     }
     
     
-    const clientFilter = appointments.filter((appointment) => getClientName(appointment.client_id).toLowerCase().includes(clientValue.toLowerCase()))
+    const clientFilter = whichAppointments.filter((appointment) => getClientName(appointment.client_id).toLowerCase().includes(clientValue.toLowerCase()))
     const serviceFilter = clientFilter.filter((appointment) => getServiceName(appointment.service_id).toLowerCase().includes(serviceValue.toLowerCase()))
     const employeeFilter = serviceFilter.filter((appointment) => getEmployeeName(appointment.employee_id).toLowerCase().includes(employeeValue.toLowerCase()))
-    
     const dateFilter = employeeFilter.filter((appointment) => {
         const formattedDate = formattedDateTime(appointment.start_time).toLowerCase()
         return formattedDate.includes(dateValue)
@@ -145,17 +101,17 @@ const ListAppointments = () => {
         <>
             <div className='form-control'>
                 <h3>appointment list</h3>
-                <p>{formattedDateTime(rightNow)}</p>
+                <p>{formattedDateTime(todayDateTime)}</p>
                 <h5>
-                <button className='btn btn-link'>
+                <button type='button' className='btn btn-link' onClick={showAllAppointments}>
                     all appointments
                     </button>
                     | 
-                    <button className='btn btn-link'>
+                    <button type='button' className='btn btn-link' onClick={showUpcomingAppointments}>
                         upcoming appointments only
                     </button> 
                     |
-                    <button className='btn btn-link'>
+                    <button type='button' className='btn btn-link' onClick={showPastAppointments}>
                         past appointments only
                     </button>
                 </h5>
