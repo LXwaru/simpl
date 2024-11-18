@@ -63,7 +63,7 @@ def update_employee_info(
     employee_id: int,
     employee_update: schemas.EmployeeIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     return crud_employees.update_employee_info(
         db=db, 
