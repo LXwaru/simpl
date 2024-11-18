@@ -5,7 +5,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import CreateAccount from './components/CreateAccount'
-import CreateCompany from './components/CreateCompany'
+import CreateCompany from './components/companies/CreateCompany'
 import ListClients from './components/clients/ListClients'
 import ListEmployees from './components/employees/ListEmployees'
 import DetailEmployee from './components/employees/DetailEmployee'
@@ -51,7 +51,7 @@ const App = () => {
           <Route path='/detail-sale/:id' element={<DetailSale />} />
           <Route path='/list-appointments' element={<ListAppointments />} /> 
           <Route path='/list-services' element={<ListServices />} /> 
-          <Route path='/create-company' element={<CreateCompany />} />
+          <Route path='/create-company/:id' element={<CreateCompany />} />
           <Route path='/create-appointment' element={<CreateAppointment />} />
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />

@@ -26,6 +26,7 @@ const CreateAccount = () => {
             }
             axios.post('http://localhost:8000/api/admins/', payload)
             alert('admin creation successful')
+            navigate('/login')
             
         } catch (error) {
             console.error('could not register new admin', error)

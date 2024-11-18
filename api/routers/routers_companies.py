@@ -5,6 +5,7 @@ from fastapi import (
     Response,
     APIRouter,
     Request,
+    Cookie
 )
 from .. import schemas, utils_db, utils_sec
 from ..crud import crud_companies
@@ -22,7 +23,7 @@ def create_company(
     admin_id: int,
     company: schemas.CompanyIn,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     return crud_companies.create_company(db=db, company=company, admin_id=admin_id)
 

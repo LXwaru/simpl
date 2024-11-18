@@ -35,7 +35,7 @@ const Nav = () => {
                             {user?.company?.name ? (
                                 <NavLink className='navbar-brand' to='/dashboard'>{user.company.name} </NavLink>
                             ) : (
-                                <NavLink className='navbar-brand' to='/create-company'>register new company</NavLink>
+                                <NavLink className='navbar-brand' to={`/create-company/${user.id}`}>register new company</NavLink>
                             )}
                             <NavLink className='navbar-brand' onClick={handleLogout}>logout</NavLink>
                         </>
