@@ -4,6 +4,7 @@ from .database import SessionLocal
 
 from .routers import (
     routers_companies,
+    routers_pay_rates,
     routers_security,
     routers_admins,
     routers_employees,
@@ -17,6 +18,7 @@ app = FastAPI()
 app.include_router(routers_admins.router, tags=["ADMINS"])
 app.include_router(routers_companies.router, tags=["COMPANIES"])
 app.include_router(routers_employees.router, tags=["EMPLOYEES"])
+app.include_router(routers_pay_rates.router, tags=["PAY RATES"])
 app.include_router(routers_clients.router, tags=["CLIENTS"])
 app.include_router(routers_services.router, tags=["SERVICES"])
 app.include_router(routers_sales.router, tags=["SALES"])

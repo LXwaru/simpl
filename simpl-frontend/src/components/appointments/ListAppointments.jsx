@@ -13,8 +13,6 @@ const ListAppointments = () => {
     const employees = user.company.employees 
     const todayDateTime = new Date()
     const appointments = user.company.appointments
-    // const upcomingAppointments = appointments.filter((appointment) => appointment.start_time > rightNow)
-    // const pastAppointments = appointments.filter((appointment) => appointment.start_time < rightNow)
     const [ whichAppointments, setWhichAppointments ] = useState([])
 
 
@@ -28,7 +26,6 @@ const ListAppointments = () => {
         const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const day = date.getDate().toString().padStart(2, '0')
         const year = date.getFullYear()
-
 
         let hours = date.getHours()
         const minutes = date.getMinutes().toString().padStart(2, '0')
@@ -96,6 +93,7 @@ const ListAppointments = () => {
     const handleServiceFilterChange = (e) => {setServiceValue(e.target.value)}
     const handleEmployeeFilterChange = (e) => {setEmployeeValue(e.target.value)}
     const handleDateFilterChange = (e) => {setDateValue(e.target.value)}
+
     
     return (
         <>

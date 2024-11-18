@@ -27,10 +27,14 @@ class Company(Base):
     appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
 
 
-# class Schedule(Base):
-#     __tablename__ = "schedules"
-#     id = Column(Integer, primary_key=True)
-#     day = Column(b)
+class PayRate(Base):
+    __tablename__ = "pay_rates"
+    id = Column(Integer, primary_key=True)
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    service_id = Column(Integer, ForeignKey('services.id'))
+    rate_per_service = Column(Numeric)
+    service = relationship("Service", back_populates="pay_rates")
+    employee = relationship("Employee", back_populates="pay_rates")
 
 
 class Employee(Base):
@@ -43,6 +47,7 @@ class Employee(Base):
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="employees")
     appointments = relationship('Appointment', back_populates='employee')
+    pay_rates = relationship("PayRate", back_populates='employee')
 
 
 class Admin(Base):
@@ -72,6 +77,7 @@ class Service(Base):
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
     company = relationship("Company", back_populates="services")
     service_items = relationship("ServiceItem", back_populates="service")
+    pay_rates = relationship("PayRate", back_populates="service")
 
 
 class Client(Base):
