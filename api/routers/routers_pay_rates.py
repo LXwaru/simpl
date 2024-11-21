@@ -45,3 +45,13 @@ def get_one_rate(
     access_token: str = Cookie(None)
 ):
     return crud_pay_rates.get_one_rate(db=db, company_id=company_id, employee_id=employee_id, service_id=service_id)
+
+
+@router.put('/api/{company_id}/pay_rate', response_model=schemas.PayRateOut)
+def update_pay_rate(
+    company_id: int,
+    pay_rate: schemas.PayRateIn,
+    db: Session = Depends(utils_db.get_db),
+    access_token: str = Cookie(None)
+):
+    return crud_pay_rates.update_pay_rate(db=db, pay_rate=pay_rate, company_id=company_id)
