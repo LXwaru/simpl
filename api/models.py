@@ -25,6 +25,7 @@ class Company(Base):
     services = relationship("Service", back_populates="company", cascade="all, delete")
     sales = relationship("Sale", back_populates='company', cascade='all, delete')
     appointments = relationship("Appointment", back_populates='company', cascade='all, delete')
+    pay_rates = relationship("PayRate", back_populates='company', cascade='all, delete')
 
 
 class PayRate(Base):
@@ -33,6 +34,8 @@ class PayRate(Base):
     employee_id = Column(Integer, ForeignKey('employees.id'))
     service_id = Column(Integer, ForeignKey('services.id'))
     rate_per_service = Column(Numeric)
+    company_id = Column(Integer, ForeignKey('companies.id'))
+    company = relationship("Company", back_populates="pay_rates")
     service = relationship("Service", back_populates="pay_rates")
     employee = relationship("Employee", back_populates="pay_rates")
 

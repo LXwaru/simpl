@@ -11,6 +11,7 @@ import ListEmployees from './components/employees/ListEmployees'
 import DetailEmployee from './components/employees/DetailEmployee'
 import CreateEmployee from './components/employees/CreateEmployee'
 import UpdateEmployee from './components/employees/UpdateEmployee'
+import PayRates from './components/employees/PayRates'
 import ListSales from './components/sales/ListSales'
 import DetailSale from './components/sales/DetailSale'
 import CreateSale from './components/sales/CreateSale'
@@ -46,6 +47,7 @@ const App = () => {
           <Route path='/detail-employee/:id' element={<DetailEmployee />} />
           <Route path='/create-employee' element={<CreateEmployee />} />
           <Route path='/update-employee/:id' element={<UpdateEmployee />} />
+          <Route path='/pay-rates/:id' element={<PayRates />} />
           <Route path='/list-sales' element={<ListSales />} /> 
           <Route path='/create-sale' element={<CreateSale />} />
           <Route path='/detail-sale/:id' element={<DetailSale />} />

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateUser } from '../../features/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import PayRates from './PayRates'
 
 const DetailEmployee = () => {
     const {id} = useParams()
@@ -99,45 +100,54 @@ const DetailEmployee = () => {
             <div className='form-control'>
             <h3>{employee.full_name}</h3>
             <Link to={`/update-employee/${id}`}>update employee information</Link>
-                <h3>upcoming appointments</h3>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>date/time</th>
-                            <th>service</th>
-                            <th>client</th>
-                            <th>confirm</th>
-                            <th>cancel appointment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                {upcomingAppointments
-                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
-                .map((appointment) => (
-                    <tr key={appointment.id}>
-                        <td>{formatDateTime(appointment.start_time)}</td>
-                        <td>{getServiceName(appointment.service_id)}</td>
-                        <td>{getClientName(appointment.client_id)}</td>
-                        {appointment.is_confirmed ? (
-                            <>
-                            <td>
-                            <Link onClick={()=>confirmAppointment(appointment.id)} >unconfirm</Link>
-                            </td>
-                            </>
-                        ) : (
-                        <td>
-                            <Link onClick={()=>confirmAppointment(appointment.id)} >confirm</Link>
-                        </td>
-                        )}
-                        <td>
-                            <Link onClick={()=>deleteAppointment(appointment.id)} >cancel</Link>
-                        </td>
-                    </tr>
-                ))}
-                        
-                    </tbody>
-                </table>
                 <div className="accordion" id="appointment">
+                    <div className="accordion-item">
+                        <h2 className="accordion-header">
+                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#upcoming_appointment" aria-expanded="false" aria-controls="upcoming_appointment">
+                                upcoming appointments: 
+                            </button>
+                            </h2>
+                            <div id="upcoming_appointment" className="accordion-collapse collapse" data-bs-parent="#upcoming_appointment">
+                                <h3>upcoming appointments</h3>
+                                <table className='table'>
+                                    <thead>
+                                        <tr>
+                                            <th>date/time</th>
+                                            <th>service</th>
+                                            <th>client</th>
+                                            <th>confirm</th>
+                                            <th>cancel appointment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                {upcomingAppointments
+                                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+                                .map((appointment) => (
+                                    <tr key={appointment.id}>
+                                        <td>{formatDateTime(appointment.start_time)}</td>
+                                        <td>{getServiceName(appointment.service_id)}</td>
+                                        <td>{getClientName(appointment.client_id)}</td>
+                                        {appointment.is_confirmed ? (
+                                            <>
+                                            <td>
+                                            <Link onClick={()=>confirmAppointment(appointment.id)} >unconfirm</Link>
+                                            </td>
+                                            </>
+                                        ) : (
+                                        <td>
+                                            <Link onClick={()=>confirmAppointment(appointment.id)} >confirm</Link>
+                                        </td>
+                                        )}
+                                        <td>
+                                            <Link onClick={()=>deleteAppointment(appointment.id)} >cancel</Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
                     <div className="accordion-item">
                             <h2 className="accordion-header">
                             <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#past_appointment" aria-expanded="false" aria-controls="past_appointment">
@@ -168,6 +178,7 @@ const DetailEmployee = () => {
                                 </table>
                             </div>
                         </div>
+                        <Link to={`/pay-rates/${id}`} className='btn btn-success'>create or edit pay rates for {employee.full_name}</Link>
                 </div>
             </div>
         </>

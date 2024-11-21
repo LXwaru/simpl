@@ -9,6 +9,7 @@ const CreateAccount = () => {
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ confirmPassword, setConfirmPassword ] = useState('')
+    const [ errorMessage, setErrorMessage ] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
     

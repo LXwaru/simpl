@@ -96,6 +96,18 @@ class ClientOut(ClientIn):
 
 
 # # Employee Model Classes
+class PayRateIn(BaseModel):
+    employee_id: int
+    service_id: int
+    rate_per_service: Union[int, None] = None
+
+class PayRateOut(PayRateIn):
+    id: int
+    company_id: int
+
+    class Config:
+        from_attributes = True
+
 class EmployeeIn(BaseModel):
     full_name: str
     email: str
@@ -106,6 +118,7 @@ class EmployeeOut(EmployeeIn):
     company_id: int
     is_active: bool
     appointments: list[AppointmentOut] = []
+    pay_rates: list[PayRateOut] = []
 
     class Config:
         from_attribute = True
@@ -147,11 +160,3 @@ class AdminOut(AdminIn):
 
     class Config:
         from_attributes = True
-
-class PayRateIn(BaseModel):
-    employee_id: int
-    service_id: int
-    rate_per_service: Union[int, None] = None
-
-class PayRateOut(PayRateIn):
-    id: int

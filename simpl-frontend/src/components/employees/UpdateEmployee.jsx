@@ -61,7 +61,7 @@ const UpdateEmployee = () => {
                     </div>
                     <button type='submit' className='btn btn-light'>submit</button>
                 </form>
-            <p></p>
+            <Link to={`/detail-employee/${id}`}>back to {employee.full_name}'s details</Link>
 
             </div>
         </>
