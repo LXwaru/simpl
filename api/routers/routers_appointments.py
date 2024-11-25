@@ -18,7 +18,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 
-@router.post('/api/{company_id}/appointments/')
+@router.post('/api/{company_id}/appointments/', response_model=schemas.AppointmentOut)
 def create_new_appointment(
     company_id: int,
     appointment: schemas.AppointmentIn,

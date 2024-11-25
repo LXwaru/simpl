@@ -14,9 +14,16 @@ const CreateSale = () => {
     const [ clientId, setClientId ] = useState(0)
     const [ serviceIds, setServiceIds ] = useState([])
     const [ totalDue, setTotalDue ] = useState(0)
+    const [ client, setClient ] = useState({})
     
     
-    const handleClientChange = (e) => setClientId(e.target.value)
+    const handleClientChange = (e) => {
+        setClientId(e.target.value)
+        const clientObject = clients.find((client) => client.id === parseInt(e.target.value, 10))
+        setClient(clientObject)
+        
+    }
+    console.log(client)
     const addToServiceList = (id) => {
         setServiceIds((prevServiceIds) => [...prevServiceIds, id])
     }

@@ -106,17 +106,16 @@ class ServiceItem(Base):
     service_id = Column(Integer, ForeignKey('services.id'))
     service_title = Column(String, index=True)
     price = Column(Integer, index=True)
-    # is_active is False until sale.is_paid = True
     is_active = Column(Boolean, default=False)
-    # is_redeemed is False until the service_item's is_completed date
     is_redeemed = Column(Boolean, default=False)
-    # completed_on is a nullable field that is filled with a datetime when the service_item is completed
     completed_on = Column(DateTime(timezone=True), nullable=True)
+    # appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=True)
     sale_id = Column(Integer, ForeignKey('sales.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
     sale = relationship('Sale', back_populates='service_items')
     client = relationship('Client', back_populates='credits')
     service = relationship("Service", back_populates='service_items')
+    appointment = relationship('Appointment', back_populates='credit')
 
 
 
@@ -145,10 +144,11 @@ class Appointment(Base):
     service_id = Column(Integer, ForeignKey('services.id'))
     start_time = Column(DateTime, index=True)
     is_confirmed = Column(Boolean, default=False)
-    has_credit = Column(Boolean, default=False)
+    credit_id = Column(Integer, ForeignKey('service_items.id'), nullable=True)
     is_complete = Column(Boolean, default=False)
 
     company_id = Column(Integer, ForeignKey('companies.id'))
+    credit = relationship('ServiceItem', back_populates='appointment')
     company = relationship("Company", back_populates="appointments")
     client = relationship('Client', back_populates='appointments')
     employee = relationship('Employee', back_populates='appointments')

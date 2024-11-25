@@ -16,19 +16,40 @@ const CreateAppointment = () => {
     const clients = user.company.clients
     const [ employeeId, setEmployeeId ] = useState('')
     const [ serviceId, setServiceId ] = useState('')
-    const [ clientId, setClientId ] = useState('')
+    const [ clientId, setClientId ] = useState(0)
+    const [ creditId, setCreditId ] = useState('')
+    const [ credits, setCredits ] = useState([])
     const [ date, setDate ] = useState(null)
     const handleEmployeeChange = (e) => setEmployeeId(e.target.value)
     const handleServiceChange = (e) => setServiceId(e.target.value)
     const handleClientChange = (e) => setClientId(e.target.value)
+    const handleCreditChange = (e) => setCreditId(e.target.value)
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
+    
     const formatDate = (rawDate) => {
         const localDate = new Date(rawDate)
         const UTCDate = localDate.toISOString()
         return UTCDate
     }
+
+    useEffect(() => {
+        const fetchCredits = () => {
+            if (!clientId && !serviceId) {
+                return
+            }
+            try {
+                const client = clients.find((client) => client.id === parseInt(clientId, 10))
+                const clientCredits = client.credits
+                const filteredCredits = clientCredits.filter((credits) => credits.service_id === parseInt(serviceId, 10))
+                setCredits(filteredCredits)
+            } catch (error) {
+                console.error('cannot fetch credits', error)
+            }
+        }
+        fetchCredits()
+    }, [clientId, serviceId])
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -41,13 +62,14 @@ const CreateAppointment = () => {
                 client_id: clientId,
                 service_id: serviceId,
                 employee_id: employeeId,
+                credit_id: creditId,
                 start_time: formatDate(date)
             }
             await axios.post(`http://localhost:8000/api/${companyId}/appointments/`, payload, {
                 withCredentials: true
             })
             alert('appointment created successfully')
-            navigate('/')
+            navigate('/dashboard')
 
             const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
                 withCredentials: true
@@ -59,6 +81,10 @@ const CreateAppointment = () => {
         }
     }
     
+    const getServiceName = (creditId) => {
+        const service = services.find((service) => service.id === parseInt(serviceId, 10))
+        return service.title
+    }
 
     return (
         <>
@@ -94,6 +120,16 @@ const CreateAppointment = () => {
                         <option value='' disabled>select an employee</option>
                     {employees.map((employee) => (
                         <option key={employee.id} value={employee.id}>{employee.full_name}</option>
+                    ))}
+                    </select>
+                    <select
+                    onChange={handleCreditChange}
+                    className="form-select form-select-sm" 
+                    aria-label="Small select example"
+                    defaultValue=''>
+                        <option value='' disabled>reserve without payment</option>
+                    {credits.map((credit) => (
+                        <option key={credit.id} value={credit.id}>service: {getServiceName(credit.service_id)}, sale id: {credit.sale_id}</option>
                     ))}
                     </select>
                     <h5>choose a date and time</h5>

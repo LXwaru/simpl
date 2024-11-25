@@ -79,6 +79,13 @@ const ListAppointments = () => {
             return <strong>incomplete</strong>
         }
     }
+    const paymentStatus = (status) => {
+        if (status) {
+            return 'paid'
+        } else {
+            return <strong>need payment</strong>
+        }
+    }
     
     
     const clientFilter = whichAppointments.filter((appointment) => getClientName(appointment.client_id).toLowerCase().includes(clientValue.toLowerCase()))
@@ -122,6 +129,7 @@ const ListAppointments = () => {
                             <th>employee</th>
                             <th>confirmation status</th>
                             <th>completion status</th>
+                            <th>payment status</th>
                         </tr>
                         <tr>
                             <th><input onChange={handleDateFilterChange} placeholder='search by date' /></th>
@@ -141,6 +149,7 @@ const ListAppointments = () => {
                             <td>{getEmployeeName(appointment.employee_id)}</td>
                             <td>{confirmStatus(appointment.is_confirmed)}</td>
                             <td>{checkoutStatus(appointment.is_complete)}</td>
+                            <td>{paymentStatus(appointment.has_credit)}</td>
                         </tr>
                     )).reverse()}
                     </tbody>

@@ -3,26 +3,6 @@ from datetime import datetime, timedelta
 from typing import Union, List, Optional
 
 
-
-# Appointment Model Classes
-class AppointmentIn(BaseModel):
-    client_id: int
-    service_id: int
-    employee_id: int
-    start_time: datetime
-
-
-class AppointmentOut(AppointmentIn):
-    id: int
-    company_id: int
-    is_confirmed: bool
-    has_credit: bool
-    is_complete: bool
-
-    class Config:
-        from_attributes=True
-
-
 # Service Model Classes
 class ServiceIn(BaseModel):
     title: str
@@ -56,6 +36,26 @@ class ServiceItemOut(ServiceItemIn):
 
     class Config:
         from_attributes = True
+
+
+# Appointment Model Classes
+class AppointmentIn(BaseModel):
+    client_id: int
+    service_id: int
+    employee_id: int
+    credit_id: Optional[int] = None
+    start_time: datetime
+
+
+class AppointmentOut(AppointmentIn):
+    id: int
+    company_id: int
+    is_confirmed: bool
+    credit: Optional[ServiceItemOut] = None
+    is_complete: bool
+
+    class Config:
+        from_attributes=True
 
 
 # Sale Model Classes

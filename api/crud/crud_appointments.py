@@ -12,28 +12,24 @@ def create_new_appointment(
         appointment: schemas.AppointmentIn,
         db: Session
 ):
+    credit = db.query(models.ServiceItem).filter(
+        models.ServiceItem.id == appointment.credit_id
+    ).one_or_none()
+    
     db_appointment = models.Appointment(
         client_id=appointment.client_id,
         employee_id=appointment.employee_id,
         service_id=appointment.service_id,
+        credit_id=appointment.credit_id,
         start_time=appointment.start_time,
         company_id=company_id,
+        credit=credit
     )
     client = db.query(models.Client).filter(
         models.Client.id == appointment.client_id
     ).one_or_none()
     if client is None:
         raise HTTPException(status_code=404, detail='client not found')
-    
-
-    paid = any(
-        credit.service_id == appointment.service_id and 
-        not credit.is_redeemed
-        for credit in client.credits
-    )
-
-    if paid:
-        db_appointment.has_credit = True
 
 
     db.add(db_appointment)
