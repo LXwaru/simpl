@@ -9,6 +9,8 @@ const AppointmentDashboard = () => {
     const user = useSelector((state) => state.user.value)
     const companyId = user.company.id
     const appointments = user.company.appointments
+    const uncompletedAppointments = appointments.filter((appointment) => appointment.is_complete === false)
+    const completedAppointments = appointments.filter((appointment) => appointment.is_complete === true)
     const [ creditId, setCreditId ] = useState(0)
     const [ loading, setLoading ] = useState(false)
     const dispatch = useDispatch()
@@ -123,6 +125,23 @@ const AppointmentDashboard = () => {
             setLoading(false)
         }
     }
+
+    const checkoutAppointment = async (appointmentId)=> {
+        
+        try {
+            await axios.put(`http://localhost:8000/api/${companyId}/appointment_checkout/${appointmentId}/`, {
+                withCredentials: true
+            })
+            alert('appointment successfully checked out')
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+
+            dispatch(updateUser(updatedUser))
+        } catch (error) {
+            console.error('could not checkout appointment', error)
+        }
+    }
     
     const cancelAppointment = async (appointmentId) => {
         try{
@@ -146,49 +165,80 @@ const AppointmentDashboard = () => {
 
     return (
         <>
-            {appointments? (
             <div className='form-control'>
+            {uncompletedAppointments.length? (
+            <div>
                 <h3>upcoming appointments</h3>
-                    <table className='table'>
-                        <thead>
-                            <tr>
-                                <th>client</th>
-                                <th>service</th>
-                                <th>employee</th>
-                                <th>date/time</th>
-                                <th>checkout</th>
-                                <th>cancel appointment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {appointments.map(appointment => (
-                            <tr key={appointment.id}>
-                                <td>{getClientName(appointment.client_id)}</td>
-                                <td>{getServiceTitle(appointment.service_id)}</td>
-                                <td>{getEmployeeName(appointment.employee_id)}</td>
-                                <td>{formatDateTime(appointment.start_time)}</td>
-                                {appointment.credit? (
-                                    <td>
-                                            <button className='btn btn-primary' onClick={() => checkoutAppointment(appointment.id)}>
-                                                checkout appointment
-                                            </button>
-                                    </td>
-                                ) : (
-                                    <td>{getCredits(appointment.client_id, appointment.service_id, appointment.id)}</td>
-                                )}
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>client</th>
+                            <th>service</th>
+                            <th>employee</th>
+                            <th>date/time</th>
+                            <th>checkout</th>
+                            <th>cancel appointment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {uncompletedAppointments
+                    .slice()
+                    .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
+                    .map(appointment => (
+                        <tr key={appointment.id}>
+                            <td>{getClientName(appointment.client_id)}</td>
+                            <td>{getServiceTitle(appointment.service_id)}</td>
+                            <td>{getEmployeeName(appointment.employee_id)}</td>
+                            <td>{formatDateTime(appointment.start_time)}</td>
+                            {appointment.credit? (
                                 <td>
-                                    <button className='btn btn-link' onClick={() => cancelAppointment(appointment.id)}>cancel appointment</button>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                                    <button className='btn btn-primary' onClick={() => checkoutAppointment(appointment.id)}>
+                                        checkout appointment
+                                    </button>
+                                </td>       
+                            ) : (
+                                <td>{getCredits(appointment.client_id, appointment.service_id, appointment.id)}</td>
+                            )}
+                            <td>
+                                <button className='btn btn-link' onClick={() => cancelAppointment(appointment.id)}>cancel appointment</button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
             ) : (
                 <div>
-                    <h3>no appointments</h3>
+                    <h3>no upcoming appointments</h3>
                 </div>
             )}
+            </div>
+            <div className='form-control'>
+                <h3>checked out appointments</h3>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>client</th>
+                            <th>service</th>
+                            <th>employee</th>
+                            <th>completed on:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {completedAppointments
+                        .slice()
+                        .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
+                        .map((appointment) => (
+                        <tr key={appointment.id}>   
+                                <td>{getClientName(appointment.client_id)}</td>
+                                <td>{getServiceTitle(appointment.service_id)}</td>
+                                <td>{getEmployeeName(appointment.employee_id)}</td>
+                                <td>{formatDateTime(appointment.credit.completed_on)}</td>
+                        </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }
