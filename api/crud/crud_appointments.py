@@ -12,8 +12,8 @@ def create_new_appointment(
         appointment: schemas.AppointmentIn,
         db: Session
 ):
-    credit = db.query(models.ServiceItem).filter(
-        models.ServiceItem.id == appointment.credit_id
+    credit = db.query(models.Credit).filter(
+        models.Credit.id == appointment.credit_id
     ).one_or_none()
     
     db_appointment = models.Appointment(
@@ -120,17 +120,18 @@ def checkout_appointment(
     ).one_or_none()
     if appointment is None:
         return None
+    if appointment.credit is None:
+        return None
     appointment.is_complete = True
 
-    service_item = db.query(models.ServiceItem).filter(
-        models.ServiceItem.service_id == appointment.service_id,
-        models.ServiceItem.client_id == appointment.client_id
-    ).first()
-    if service_item is None:
+    credit = db.query(models.Credit).filter(
+        models.Credit.id == appointment.credit_id
+    ).one_or_none()
+    if credit is None:
         raise HTTPException(status_code=401, detail='no credit on file')
     
-    service_item.is_redeemed = True
-    service_item.completed_on = datetime.now()
+    credit.is_redeemed = True
+    credit.completed_on = datetime.now()
     
     db.commit()
     db.refresh(appointment)
@@ -153,3 +154,30 @@ def delete_appointment(
     db.delete(appointment)
     db.commit()
     return {'detail': 'appointment successfully deleted'}
+
+
+def apply_credit(
+    company_id: int,
+    appointment_id: int,
+    credit_id: int,
+    db: Session
+):
+    appointment = db.query(models.Appointment).filter(
+        models.Appointment.company_id == company_id,
+        models.Appointment.id == appointment_id
+        ).one_or_none()
+    
+    if appointment is None: 
+        return None
+    db_credit = db.query(models.Credit).filter(
+        models.Appointment.company_id == company_id,
+        models.Credit.id == credit_id).one_or_none()
+    if db_credit is None:
+        return None
+    appointment.credit = db_credit
+    db.commit()
+    db.refresh(appointment)
+    return appointment
+
+
+    

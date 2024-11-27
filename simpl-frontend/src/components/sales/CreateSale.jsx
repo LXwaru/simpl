@@ -23,7 +23,6 @@ const CreateSale = () => {
         setClient(clientObject)
         
     }
-    console.log(client)
     const addToServiceList = (id) => {
         setServiceIds((prevServiceIds) => [...prevServiceIds, id])
     }

@@ -17,7 +17,7 @@ const CreateAppointment = () => {
     const [ employeeId, setEmployeeId ] = useState('')
     const [ serviceId, setServiceId ] = useState('')
     const [ clientId, setClientId ] = useState(0)
-    const [ creditId, setCreditId ] = useState('')
+    const [ creditId, setCreditId ] = useState(0)
     const [ credits, setCredits ] = useState([])
     const [ date, setDate ] = useState(null)
     const handleEmployeeChange = (e) => setEmployeeId(e.target.value)
@@ -81,7 +81,7 @@ const CreateAppointment = () => {
         }
     }
     
-    const getServiceName = (creditId) => {
+    const getServiceName = (serviceId) => {
         const service = services.find((service) => service.id === parseInt(serviceId, 10))
         return service.title
     }
@@ -122,7 +122,7 @@ const CreateAppointment = () => {
                         <option key={employee.id} value={employee.id}>{employee.full_name}</option>
                     ))}
                     </select>
-                    <select
+                    {/* <select
                     onChange={handleCreditChange}
                     className="form-select form-select-sm" 
                     aria-label="Small select example"
@@ -131,7 +131,7 @@ const CreateAppointment = () => {
                     {credits.map((credit) => (
                         <option key={credit.id} value={credit.id}>service: {getServiceName(credit.service_id)}, sale id: {credit.sale_id}</option>
                     ))}
-                    </select>
+                    </select> */}
                     <h5>choose a date and time</h5>
                     <Flatpickr
                     placeholder='click here'

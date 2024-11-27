@@ -79,7 +79,7 @@ class Service(Base):
     is_enabled = Column(Boolean, default=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
     company = relationship("Company", back_populates="services")
-    service_items = relationship("ServiceItem", back_populates="service")
+    credits = relationship("Credit", back_populates="service")
     pay_rates = relationship("PayRate", back_populates="service")
 
 
@@ -94,13 +94,13 @@ class Client(Base):
     email = Column(String, unique=False, index=True)
     company_id = Column(Integer, ForeignKey("companies.id"))
     company = relationship("Company", back_populates="clients")
-    credits = relationship("ServiceItem", back_populates="client")
+    credits = relationship("Credit", back_populates="client")
     sales = relationship('Sale', back_populates='client')
     appointments = relationship('Appointment', back_populates='client')
 
 
-class ServiceItem(Base):
-    __tablename__ = "service_items"
+class Credit(Base):
+    __tablename__ = "credits"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     service_id = Column(Integer, ForeignKey('services.id'))
@@ -112,9 +112,9 @@ class ServiceItem(Base):
     # appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=True)
     sale_id = Column(Integer, ForeignKey('sales.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
-    sale = relationship('Sale', back_populates='service_items')
+    sale = relationship('Sale', back_populates='credits')
     client = relationship('Client', back_populates='credits')
-    service = relationship("Service", back_populates='service_items')
+    service = relationship("Service", back_populates='credits')
     appointment = relationship('Appointment', back_populates='credit')
 
 
@@ -129,7 +129,7 @@ class Sale(Base):
     client_id = Column(Integer, ForeignKey("clients.id"))
     client_name = Column(String, index=True)
     total_due = Column(Numeric, index=True)
-    service_items: Mapped[List["ServiceItem"]] = relationship(back_populates='sale')
+    credits: Mapped[List["Credit"]] = relationship(back_populates='sale')
 
     company = relationship("Company", back_populates="sales")
     client = relationship("Client", back_populates="sales")
@@ -144,11 +144,11 @@ class Appointment(Base):
     service_id = Column(Integer, ForeignKey('services.id'))
     start_time = Column(DateTime, index=True)
     is_confirmed = Column(Boolean, default=False)
-    credit_id = Column(Integer, ForeignKey('service_items.id'), nullable=True)
+    credit_id = Column(Integer, ForeignKey('credits.id'), nullable=True)
     is_complete = Column(Boolean, default=False)
 
     company_id = Column(Integer, ForeignKey('companies.id'))
-    credit = relationship('ServiceItem', back_populates='appointment')
+    credit = relationship('Credit', back_populates='appointment')
     company = relationship("Company", back_populates="appointments")
     client = relationship('Client', back_populates='appointments')
     employee = relationship('Employee', back_populates='appointments')

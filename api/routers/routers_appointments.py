@@ -47,7 +47,7 @@ def list_appointments(
     return appointments
 
 
-@router.get('/api/{company_id}/appointment/{appointment_id}', response_model=schemas.AppointmentOut)
+@router.get('/api/{company_id}/appointment/{appointment_id}/', response_model=schemas.AppointmentOut)
 def detail_appointment(
     company_id: int,
     appointment_id: int,
@@ -64,7 +64,7 @@ def detail_appointment(
     return appointment
 
 
-@router.put('/api/{company_id}/appointment_edit/{appointment_id}', response_model=schemas.AppointmentOut)
+@router.put('/api/{company_id}/appointment_edit/{appointment_id}/', response_model=schemas.AppointmentOut)
 def edit_entire_appointment(
     company_id: int,
     appointment_id: int,
@@ -83,7 +83,7 @@ def edit_entire_appointment(
     return appointment
 
 
-@router.put('/api/{company_id}/appointment_confirm/{appointment_id}', response_model=schemas.AppointmentOut)
+@router.put('/api/{company_id}/appointment_confirm/{appointment_id}/', response_model=schemas.AppointmentOut)
 def toggle_confirm_appointment(
     company_id: int,
     appointment_id: int,
@@ -100,12 +100,24 @@ def toggle_confirm_appointment(
     return appointment
 
 
-@router.put('/api/{company_id}/appointment_checkout/{appointment_id}', response_model=schemas.AppointmentOut)
+@router.put('/api/{company_id}/apply_credit/{appointment_id}/{credit_id}/', response_model=schemas.AppointmentOut)
+def apply_credit(
+    company_id: int,
+    appointment_id: int,
+    credit_id: int,
+    db: Session = Depends(utils_db.get_db),
+    access_token: str = Cookie(None)
+):
+    appointment = crud_appointments.apply_credit(db=db, company_id=company_id, appointment_id=appointment_id, credit_id=credit_id)
+    return appointment
+
+
+@router.put('/api/{company_id}/appointment_checkout/{appointment_id}/', response_model=schemas.AppointmentOut)
 def checkout_appointment(
     company_id: int,
     appointment_id: int,
     db: Session = Depends(utils_db.get_db),
-    token: str = Depends(oauth2_scheme)
+    access_token: str = Cookie(None)
 ):
     appointment = crud_appointments.checkout_appointment(
         db=db,
@@ -117,7 +129,10 @@ def checkout_appointment(
     return appointment
 
 
-@router.delete('/api/{company_id}/appointment/{appointment_id}')
+    
+
+
+@router.delete('/api/{company_id}/appointment/{appointment_id}/')
 def delete_appointment(
     company_id: int,
     appointment_id: int,

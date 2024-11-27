@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from .. import models, schemas
 
 
-def create_service_item(
+def create_credits(
         db: Session,
         service_id: int,
         client_id: int
@@ -15,16 +15,16 @@ def create_service_item(
     service = db.query(models.Service).filter(models.Service.id == service_id).one_or_none()
     if service is None:
         return None
-    service_item = models.ServiceItem(
+    credit = models.Credit(
         service_id = service.id,
         service_title = service.title,
         price = service.price,
         client_id = client_id
     )
-    db.add(service_item)
+    db.add(credit)
     db.commit()
-    db.refresh(service_item)
-    return service_item
+    db.refresh(credit)
+    return credit
 
 
 def create_sale(
@@ -34,18 +34,18 @@ def create_sale(
 ) -> schemas.SaleOut:
     
     # get a list of services
-    service_items = []
+    credits = []
     amount_due = 0
     for service_id in sale.service_ids:
-        service_item = create_service_item( 
+        credit = create_credits( 
             db=db,
             service_id=service_id,
             client_id = sale.client_id
         )
-        if service_item is None:
+        if credit is None:
             raise HTTPException(status_code=404, detail=f"Service with ID {service_id} not found")
         
-        service_items.append(service_item)
+        credits.append(credit)
     # get total price for the sale
         service = db.query(models.Service).filter(
             models.Service.id == service_id,
@@ -67,7 +67,7 @@ def create_sale(
         date=datetime.now(),
         client_id=sale.client_id,
         client_name=client.full_name,
-        service_items=service_items,
+        credits=credits,
         company_id=company_id,
         company_name=company.name,
         total_due=amount_due,

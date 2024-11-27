@@ -258,9 +258,9 @@ const DetailClient = () => {
                                             <td>{sale.id}</td>
                                             <td>{getSaleDate(sale.id)}</td>
                                             <td>
-                                            {sale.service_items.map((service_item) => (
-                                                <ul className='list-group' key={service_item.id}>
-                                                    <li className='list-group-item'>{getServiceName(service_item.service_id)}</li>
+                                            {sale.credits.map((credit) => (
+                                                <ul className='list-group' key={credit.id}>
+                                                    <li className='list-group-item'>{getServiceName(credit.service_id)}</li>
                                                 </ul>
                                             ))}
                                             </td>

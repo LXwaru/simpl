@@ -62,7 +62,7 @@ const DetailSale = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {sale.service_items.map((item) => (
+                        {sale.credits.map((item) => (
                             <tr key={item.id}>
                                 <td>{item.service_title}</td>
                                 <td>${item.price}</td>
