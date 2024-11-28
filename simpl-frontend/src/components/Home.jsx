@@ -6,7 +6,9 @@ const Home = () => {
     const [ usertoken, setUsertoken  ] = useState('')
     return (
         <>
-            <h1>homepage</h1>   
+            <h1>[ s | b | s ]</h1>
+            <h3>simpl business solutions</h3>
+            <p>the simple solution for all of your merchant service needs</p>
         </>
     )
 }

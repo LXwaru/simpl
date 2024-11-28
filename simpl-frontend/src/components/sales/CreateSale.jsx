@@ -65,7 +65,7 @@ const CreateSale = () => {
                 withCredentials: true
             })
             alert('sale successfully registered')
-            navigate('/list-sales')
+            navigate('/dashboard')
             const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
                 withCredentials: true
             })

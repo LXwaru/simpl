@@ -70,7 +70,7 @@ const AppointmentDashboard = () => {
             const availableCredits = filteredCredits.filter((credit) => credit.is_redeemed === false)
             return (
                 <>
-                    {!availableCredits? (
+                    {!availableCredits.length? (
                         <div>
                             <p><i>no credits available</i></p>
                             <Link 
@@ -214,30 +214,38 @@ const AppointmentDashboard = () => {
             )}
             </div>
             <div className='form-control'>
-                <h3>checked out appointments</h3>
-                <table className='table'>
-                    <thead>
-                        <tr>
-                            <th>client</th>
-                            <th>service</th>
-                            <th>employee</th>
-                            <th>completed on:</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {completedAppointments
-                        .slice()
-                        .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
-                        .map((appointment) => (
-                        <tr key={appointment.id}>   
-                                <td>{getClientName(appointment.client_id)}</td>
-                                <td>{getServiceTitle(appointment.service_id)}</td>
-                                <td>{getEmployeeName(appointment.employee_id)}</td>
-                                <td>{formatDateTime(appointment.credit.completed_on)}</td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {completedAppointments.length? (
+                    <div className='form-control'>
+                        <h3>checked out appointments</h3>
+                        <table className='table'>
+                            <thead>
+                                <tr>
+                                    <th>client</th>
+                                    <th>service</th>
+                                    <th>employee</th>
+                                    <th>completed on:</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {completedAppointments
+                                .slice()
+                                .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
+                                .map((appointment) => (
+                                <tr key={appointment.id}>   
+                                        <td>{getClientName(appointment.client_id)}</td>
+                                        <td>{getServiceTitle(appointment.service_id)}</td>
+                                        <td>{getEmployeeName(appointment.employee_id)}</td>
+                                        <td>{formatDateTime(appointment.credit.completed_on)}</td>
+                                </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div>
+                        <h3>no past appointments</h3>
+                    </div>
+                )}
             </div>
         </>
     )

@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 
-const ListAppointments = () => {
+const SearchAppointments
+ = () => {
     const [ clientValue, setClientValue ] = useState('')
     const [ serviceValue, setServiceValue ] = useState('')
     const [ employeeValue, setEmployeeValue ] = useState('')
@@ -105,7 +106,7 @@ const ListAppointments = () => {
     return (
         <>
             <div className='form-control'>
-                <h3>appointment list</h3>
+                <h3>appointment search</h3>
                 <p>{formattedDateTime(todayDateTime)}</p>
                 <h5>
                 <button type='button' className='btn btn-link' onClick={showAllAppointments}>
@@ -129,7 +130,6 @@ const ListAppointments = () => {
                             <th>employee</th>
                             <th>confirmation status</th>
                             <th>completion status</th>
-                            <th>payment status</th>
                         </tr>
                         <tr>
                             <th><input onChange={handleDateFilterChange} placeholder='search by date' /></th>
@@ -149,7 +149,6 @@ const ListAppointments = () => {
                             <td>{getEmployeeName(appointment.employee_id)}</td>
                             <td>{confirmStatus(appointment.is_confirmed)}</td>
                             <td>{checkoutStatus(appointment.is_complete)}</td>
-                            <td>{paymentStatus(appointment.has_credit)}</td>
                         </tr>
                     )).reverse()}
                     </tbody>
@@ -158,4 +157,4 @@ const ListAppointments = () => {
         </>
     )
 }
-export default ListAppointments
+export default SearchAppointments

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 
-const ListSales = () => {
+const SearchSales = () => {
     const user = useSelector((state) => state.user.value)
     const sales = user.company.sales
     const [ nameFilterValue, setNameFilterValue ] = useState('')
@@ -35,6 +35,7 @@ const formatDateTime = (date) => {
     return (
         <>
             <div className='form-control'>
+                <h3>sales search</h3>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -69,4 +70,4 @@ const formatDateTime = (date) => {
         </>
     )
 }
-export default ListSales
+export default SearchSales

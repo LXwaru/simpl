@@ -31,10 +31,16 @@ const PayRates = () => {
     const handleRateChange = (e) => {setRate(e.target.value)}
 
     const checkRate = async (serviceId) => {
+        const service = services.find((service) => service.id === parseInt(serviceId, 10))
+        if (rate >= service.price) {
+            alert('rate must be less than gross price')
+            return
+        }
         const payRate = payRates.find((payRate) => payRate.service_id === serviceId)
         if (payRate) {
             try {
                 setLoading(true)
+
                 const payload = {
                     employee_id: id,
                     service_id: serviceId,
@@ -89,6 +95,7 @@ const PayRates = () => {
                     <thead>
                         <tr>
                             <th>service title</th>
+                            <th>gross per service</th>
                             <th>current pay rate</th>
                             <th>establish or update</th>
                         </tr>
@@ -97,6 +104,7 @@ const PayRates = () => {
                     {services.map((service) => (
                         <tr key={service.id}>
                             <td>{service.title}</td>
+                            <td>${service.price}</td>
                             <td>{fetchPayRate(service.id)}</td>
                             <td>
                                 <div className='form-floating mb-3'>

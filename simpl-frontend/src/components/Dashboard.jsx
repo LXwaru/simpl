@@ -76,11 +76,11 @@ const Dashboard = () => {
                 <div>
                     <h3>{user.company.name}</h3>
                     <p>{user.company.description}</p>
+                    <AppointmentDashboard />
                 </div>
             ) : (
                 <h3>{user.username}</h3>
             )}
-            <AppointmentDashboard />
         </>
     )
 }

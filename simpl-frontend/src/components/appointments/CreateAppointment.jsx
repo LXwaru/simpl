@@ -122,16 +122,6 @@ const CreateAppointment = () => {
                         <option key={employee.id} value={employee.id}>{employee.full_name}</option>
                     ))}
                     </select>
-                    {/* <select
-                    onChange={handleCreditChange}
-                    className="form-select form-select-sm" 
-                    aria-label="Small select example"
-                    defaultValue=''>
-                        <option value='' disabled>reserve without payment</option>
-                    {credits.map((credit) => (
-                        <option key={credit.id} value={credit.id}>service: {getServiceName(credit.service_id)}, sale id: {credit.sale_id}</option>
-                    ))}
-                    </select> */}
                     <h5>choose a date and time</h5>
                     <Flatpickr
                     placeholder='click here'
