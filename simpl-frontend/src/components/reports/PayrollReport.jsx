@@ -1,34 +1,19 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useSelector, useDispatch } from 'react-redux'
-import { setUser } from '../../features/user/userSlice'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css"
 
 
-
-const PayrollReport = () => {
+const GenerateReport = ({ dateRange, employeeId, employees }) => {
+    const user = useSelector((state) => state.user.value)
+    const [ appointmentFilter, setAppointmentFilter ] = useState([])
+    const employee = employees.find((employee) => employee.id === parseInt(employeeId, 10))
     const [ startDate, setStartDate ] = useState('')
     const [ endDate, setEndDate ] = useState('')
-    const [ employeeId, setEmployeeId ] = useState(0)
-    const user = useSelector((state) => state.user.value)
-    const allAppointments = user.company.appointments
-    const [ appointmentFilter, setAppointmentFilter ] = useState([])
-    const [ loading, setLoading ] = useState(false)
-    const employees = user.company.employees
     const services = user.company.services
     const clients = user.company.clients
+    const [ loading, setLoading ] = useState(false)
 
-
-
-    const handleEmployeeChange = (e) => {
-        setEmployeeId(e.target.value)
-    }
-
-    const getServiceName = (serviceId) => {
-        const service = services.find((service) => service.id === parseInt(serviceId, 10))
-        return service.title
-    }
 
     const getClientName = (clientId) => {
         const client = clients.find((client) => client.id === parseInt(clientId, 10))
@@ -43,46 +28,71 @@ const PayrollReport = () => {
             rate.service_id === parseInt(serviceId, 10))
             return payRate ? payRate.rate_per_service : null
         }
-    
 
-    const GenerateReport = (startDate, endDate, clientId) => {
-        const employee = employees.find((employee) => employee.id === parseInt(employeeId, 10))
-        return (
-            <>
-                {employee? (
-                    <div>
+    const formattedDateTime = (dateTime) => {
+        const date = new Date(dateTime)
 
-                        <h3>{employee.full_name}</h3>
-                        <table className='table'>
-                            <thead>
-                                <tr>
-                                    <th>date</th>
-                                    <th>service</th>
-                                    <th>client</th>
-                                    <th>wage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {employee.appointments.map((appointment) => (
-                                    <tr key={appointment.id}>
-                                        <td>{appointment.start_time}</td>
-                                        <td>{getServiceName(appointment.service_id)}</td>
-                                        <td>{getClientName(appointment.client_id)}</td>
-                                        <td>{getPayRate(appointment.employee_id, appointment.service_id)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>    
-                    </div>
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+        const dayOfWeek = daysOfWeek[date.getDay()];
 
+        // in short date format
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const day = date.getDate().toString().padStart(2, '0')
+        const year = date.getFullYear()
 
-                ) : (
-                    <h3>select an employee</h3>
-                )}
+        let hours = date.getHours()
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        const ampm = hours >= 12 ? 'pm' : 'am'
 
-            </>
-        )
+        hours = hours % 12 || 12
+
+        // for short date format
+        const formattedDate = `${month}/${day}/${year}`
+        const formattedTime = `${hours}:${minutes}${ampm}`
+        return `${dayOfWeek}, ${formattedDate} - ${formattedTime}`
     }
+
+    const getServiceName = (serviceId) => {
+        const service = services.find((service) => service.id === parseInt(serviceId, 10))
+        return service.title
+    }
+
+    const filterAppointments = () => {
+        if (!employee || !startDate || !endDate) {
+            return
+        }
+        if (employeeId && dateRange.length === 2) {
+            try {
+                setLoading(true)
+                const filter = employee.appointments.filter((appointment) => 
+                    appointment.credit.completed_on > startDate &&
+                    appointment.credit.completed_on < `${endDate}T23:59:00000`
+            )
+            setAppointmentFilter(filter)
+            console.log('this is loading')
+            } catch (error) {
+                console.error('could not fetch appointments', error)
+            } finally {
+                setLoading(false)
+                console.log('this is done loading')
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (dateRange[0] && dateRange[1]) {
+            const formattedStartDate = dateRange[0].toISOString()
+            const formattedEndDate = dateRange[1].toISOString()
+            setStartDate(formattedStartDate)
+            setEndDate(formattedEndDate)
+        }
+    }, [dateRange])
+
+    useEffect(() => {
+        if (startDate && endDate && employee) {
+            filterAppointments()
+        }
+    }, [employee, startDate, endDate])
 
     if (loading) {
         return <div>loading...</div>
@@ -90,13 +100,62 @@ const PayrollReport = () => {
 
     return (
         <>
-            <div className='form-control'>
+            {employee? (
+                <div>
+                    <h3>{employee.full_name}</h3>
+                    <h5>pay for specified date range: $</h5>
+                    <table className='table'>
+                        <thead>
+                            <tr>
+                                <th>date completed</th>
+                                <th>service</th>
+                                <th>client</th>
+                                <th>wage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {appointmentFilter.map((appointment) => (
+                                <tr key={appointment.id}>
+                                    <td>{formattedDateTime(appointment.credit.completed_on)}</td>
+                                    <td>{getServiceName(appointment.service_id)}</td>
+                                    <td>{getClientName(appointment.client_id)}</td>
+                                    <td>${getPayRate(appointment.employee_id, appointment.service_id)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>    
+                </div>
+
+
+            ) : (
+                <h3>select an employee</h3>
+            )}
+
+        </>
+    )
+}
+
+
+const PayrollReport = () => {
+    const user = useSelector((state) => state.user.value)
+    const [ dateRange, setDateRange ] = useState([])
+    const [ employeeId, setEmployeeId ] = useState(0)
+    const employees = user.company.employees
+
+    const handleEmployeeChange = (e) => {
+        setEmployeeId(e.target.value)
+    }
+    
+    let days
+    
+    return (
+        <>
+            <div className='form-control container-l'>
                 <h3>payroll report</h3>
                 <table className='table'>
                     <thead>
                         <tr>
-                            <th>choose starting date</th>
-                            <th>choose ending date</th>
+                            <th>choose date range</th>
                             <th>select employee</th>
                         </tr>
                     </thead>
@@ -104,26 +163,12 @@ const PayrollReport = () => {
                         <tr>
                             <td>
                                 <Flatpickr
-                                placeholder='click here'
-                                value={startDate}
-                                onChange={(startDate) => setStartDate(startDate)}
-                                options={{
-                                    enableTime: true,
-                                    minTime: "9:00",
-                                    maxTime: "17:00",
-                                    minuteIncrement: 15,
-                                    dateFormat: 'D, m/d/Y, H:i'
-                                }}
-                                />
-                            </td>
-                            <td>
-                                <Flatpickr
                                     placeholder='click here'
-                                    value={endDate}
-                                    onChange={(endDate) => setEndDate(endDate)}
+                                    value={dateRange}
+                                    onChange={(days) => setDateRange(days)}
                                     options={{
-                                        enableTime: false,
-                                        dateFormat: 'D, m/d/Y'
+                                        mode: 'range',
+                                        dateFormat: 'm/d/y'
                                     }}
                                     />
                             </td>
@@ -144,9 +189,17 @@ const PayrollReport = () => {
                 </table>
             </div>
                 <div className='form-control'>
-                    <GenerateReport />
+                    <GenerateReport 
+                        employeeId={employeeId}
+                        employees={employees}
+                        dateRange={dateRange}
+                    />
                 </div>
         </>
     ) 
 }
 export default PayrollReport
+
+
+
+
