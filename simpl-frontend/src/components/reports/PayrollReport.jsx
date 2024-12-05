@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/material_green.css"
+import axios from 'axios'
 
 
 const GenerateReport = ({ dateRange, employeeId, employees }) => {
     const user = useSelector((state) => state.user.value)
+    const companyId = user.company.id
     const [ appointmentFilter, setAppointmentFilter ] = useState([])
     const employee = employees.find((employee) => employee.id === parseInt(employeeId, 10))
     const [ startDate, setStartDate ] = useState('')
@@ -13,6 +15,7 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
     const services = user.company.services
     const clients = user.company.clients
     const [ loading, setLoading ] = useState(false)
+    const [ total, setTotal ] = useState(0)
 
 
     const getClientName = (clientId) => {
@@ -69,15 +72,46 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
                     appointment.credit.completed_on < `${endDate}T23:59:00000`
             )
             setAppointmentFilter(filter)
-            console.log('this is loading')
             } catch (error) {
                 console.error('could not fetch appointments', error)
             } finally {
                 setLoading(false)
-                console.log('this is done loading')
             }
         }
     }
+
+
+    const getTotal = async (appointments) => {
+        if (!appointments){
+            return
+        }
+        let totalPay = 0
+        for (let appointment of appointments) {
+            let serviceId = appointment.service_id
+            let employeeId = appointment.employee_id
+            try {
+                setLoading(true)
+                let payRateResponse = await axios.get(`http://localhost:8000/api/${companyId}/pay_rate/${employeeId}/${serviceId}/`, {
+                    withCredentials: true
+                })
+                let payRateResponseData = payRateResponse.data
+                let ratePerService = payRateResponseData.rate_per_service
+                totalPay += ratePerService
+                setTotal(totalPay)
+                
+            } catch (error) {
+                console.error('could not calculate payroll', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+    }
+    
+    useEffect(() => {
+        getTotal(appointmentFilter)
+    }, [appointmentFilter])
+
+
 
     useEffect(() => {
         if (dateRange[0] && dateRange[1]) {
@@ -103,12 +137,13 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
             {employee? (
                 <div>
                     <h3>{employee.full_name}</h3>
-                    <h5>pay for specified date range: $</h5>
+                    <h5>pay for specified date range:</h5>
+                    <p>${total}</p>
                     <table className='table'>
-                        <thead>
+                        <thead>  
                             <tr>
                                 <th>date completed</th>
-                                <th>service</th>
+                                <th>service</th>  
                                 <th>client</th>
                                 <th>wage</th>
                             </tr>

@@ -16,7 +16,7 @@ const formatDateTime = (date) => {
     const year = formattedDate.getFullYear()
     const hours = String(formattedDate.getHours()).padStart(2, '0')
     const minutes = String(formattedDate.getMinutes()).padStart(2, '0')
-    return `${month}/${day}/${year}, ${hours}:${minutes}`
+    return `${month}/${day}/${year}`
 }
 
 
