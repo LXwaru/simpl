@@ -1,0 +1,12 @@
+drop table admins cascade;
+drop table companies cascade;
+drop table employees cascade;
+drop table clients cascade;
+drop table services cascade;
+drop table sales cascade;
+drop table credits cascade;
+drop table appointments cascade;
+drop table pay_rates cascade;
+
+
+
