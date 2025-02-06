@@ -186,9 +186,9 @@ const AppointmentDashboard = () => {
                     .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
                     .map(appointment => (
                         <tr key={appointment.id}>
-                            <td>{getClientName(appointment.client_id)}</td>
+                            <td><Link to={`/detail-client/${appointment.client_id}`}>{getClientName(appointment.client_id)}</Link></td>
                             <td>{getServiceTitle(appointment.service_id)}</td>
-                            <td>{getEmployeeName(appointment.employee_id)}</td>
+                            <td><Link to={`/detail-employee/${appointment.employee_id}`}>{getEmployeeName(appointment.employee_id)}</Link></td>
                             <td>{formatDateTime(appointment.start_time)}</td>
                             {appointment.credit? (
                                 <td>
@@ -232,9 +232,9 @@ const AppointmentDashboard = () => {
                                 .sort((a, b) => new Date(a.start_time) - new Date (b.start_time))
                                 .map((appointment) => (
                                 <tr key={appointment.id}>   
-                                        <td>{getClientName(appointment.client_id)}</td>
+                                        <td><Link to={`/detail-client/${appointment.client_id}`}>{getClientName(appointment.client_id)}</Link></td>
                                         <td>{getServiceTitle(appointment.service_id)}</td>
-                                        <td>{getEmployeeName(appointment.employee_id)}</td>
+                                        <td><Link to={`/detail-employee/${appointment.employee_id}`}>{getEmployeeName(appointment.employee_id)}</Link></td>
                                         <td>{formatDateTime(appointment.credit.completed_on)}</td>
                                 </tr>
                                 ))}
