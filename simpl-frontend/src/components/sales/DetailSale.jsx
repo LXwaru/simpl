@@ -72,7 +72,7 @@ const DetailSale = () => {
                         ))}
                     </tbody>
                 </table>
-                <Link to='/list-sales'>return to sales list</Link>
+                <Link to='/search-sales'>return to sales list</Link>
             </div>
         </>
     )

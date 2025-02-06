@@ -43,7 +43,6 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/create-account' element={<CreateAccount />} />
-          <Route path='/list-clients' element={<ListClients />} /> 
           <Route path='/list-employees' element={<ListEmployees />} /> 
           <Route path='/detail-employee/:id' element={<DetailEmployee />} />
           <Route path='/create-employee' element={<CreateEmployee />} />
@@ -60,6 +59,7 @@ const App = () => {
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
           <Route path='/edit-service/:id' element={<EditService />} />
+          <Route path='/list-clients' element={<ListClients />} /> 
           <Route path='/detail-client/:id' element={<DetailClient />} />
           <Route path='/create-client' element={<CreateClient />} />
           <Route path='/update-client/:id' element={<UpdateClient />} />

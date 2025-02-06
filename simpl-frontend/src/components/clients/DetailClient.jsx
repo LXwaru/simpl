@@ -212,7 +212,6 @@ const DetailClient = () => {
                                             <td>date/time</td>
                                             <td>duration</td>
                                             <td>confirmation status</td>
-                                            <td>payment status</td>
                                             <td>checked out status</td>
                                         </tr>
                                     </thead>
@@ -225,7 +224,6 @@ const DetailClient = () => {
                                             <td>{formatDateTime(appointment.start_time)}</td>
                                             <td>{formatDuration(appointment.service_id)}</td>
                                             <td>{getConfirmationStatus(appointment.is_confirmed)}</td>
-                                            <td>{getPaymentStatus(appointment.has_credit)}</td>
                                             <td>{isCompleteStatus(appointment.is_complete)}</td>
                                         </tr>
                                         )).reverse()}
