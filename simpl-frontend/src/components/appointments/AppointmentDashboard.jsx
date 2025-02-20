@@ -126,6 +126,7 @@ const AppointmentDashboard = () => {
         }
     }
 
+
     const checkoutAppointment = async (appointmentId)=> {
         
         try {
@@ -143,6 +144,7 @@ const AppointmentDashboard = () => {
         }
     }
     
+
     const cancelAppointment = async (appointmentId) => {
         try{
             await axios.delete(`http://localhost:8000/api/${companyId}/appointment/${appointmentId}/`, {
@@ -159,10 +161,33 @@ const AppointmentDashboard = () => {
         }
     }
 
+
+    const confirmAppointment = (isConfirmed, appointmentId) => {
+        if (!isConfirmed) {
+            const confirm = async (appointmentId) => {
+                try {
+                    await axios.put(`http://localhost:8000/api/${companyId}/appointment_confirm/${appointmentId}`, {
+                        withCredentials: true
+                    })
+                    const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                        withCredentials: true
+                    })
+                    dispatch(updateUser(updatedUser))
+                } catch (error) {
+                    console.error("could not confirm appointment", error)
+                }
+            }
+            return <button className="btn btn-link" onClick={() => confirm(appointmentId)}>confirm</button>
+        } else {
+            return "confirmed"
+        }
+    }
+
+
     if (loading) {
         return <div><p>Loading...</p></div>
     }
-
+    
     return (
         <>
             <div className='form-control'>
@@ -176,6 +201,7 @@ const AppointmentDashboard = () => {
                             <th>service</th>
                             <th>employee</th>
                             <th>date/time</th>
+                            <th>confirm</th>
                             <th>checkout</th>
                             <th>cancel appointment</th>
                         </tr>
@@ -190,6 +216,7 @@ const AppointmentDashboard = () => {
                             <td>{getServiceTitle(appointment.service_id)}</td>
                             <td><Link to={`/detail-employee/${appointment.employee_id}`}>{getEmployeeName(appointment.employee_id)}</Link></td>
                             <td>{formatDateTime(appointment.start_time)}</td>
+                            <td>{confirmAppointment(appointment.is_confirmed, appointment.id)}</td>
                             {appointment.credit? (
                                 <td>
                                     <button className='btn btn-primary' onClick={() => checkoutAppointment(appointment.id)}>
@@ -200,7 +227,7 @@ const AppointmentDashboard = () => {
                                 <td>{getCredits(appointment.client_id, appointment.service_id, appointment.id)}</td>
                             )}
                             <td>
-                                <button className='btn btn-link' onClick={() => cancelAppointment(appointment.id)}>cancel appointment</button>
+                                <button className='btn btn-link' onClick={() => cancelAppointment(appointment.id)}>cancel</button>
                             </td>
                         </tr>
                     ))}

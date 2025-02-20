@@ -14,6 +14,7 @@ const CreateAppointment = () => {
     const employees = user.company.employees
     const services = user.company.services
     const clients = user.company.clients
+    const appointments = user.company.appointments
     const [ employeeId, setEmployeeId ] = useState('')
     const [ serviceId, setServiceId ] = useState('')
     const [ clientId, setClientId ] = useState(0)
@@ -31,6 +32,18 @@ const CreateAppointment = () => {
         const localDate = new Date(rawDate)
         const UTCDate = localDate.toISOString()
         return UTCDate
+    }
+
+
+    const findConflicts = (clientId, employeeId, serviceId, date) => {
+        const selectedService = services.find(service => service.id === parseInt(serviceId, 10))
+        const serviceDuration = selectedService.duration
+        const serviceStartTime = selectedService.start_time
+        const employeeConflict = appointments.filter(appointment => {
+            appointment.employee_id === employeeId &&
+            appointment.start_time < serviceDuration &&
+            appointment.start_time > serviceDuration
+        })
     }
 
     useEffect(() => {
@@ -57,6 +70,7 @@ const CreateAppointment = () => {
             alert('client, service, employee AND date must be selected')
             return
         }
+
         try {
             const payload = {
                 client_id: clientId,
@@ -70,6 +84,7 @@ const CreateAppointment = () => {
             })
             alert('appointment created successfully')
             navigate('/dashboard')
+        
 
             const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
                 withCredentials: true
@@ -81,10 +96,6 @@ const CreateAppointment = () => {
         }
     }
     
-    const getServiceName = (serviceId) => {
-        const service = services.find((service) => service.id === parseInt(serviceId, 10))
-        return service.title
-    }
 
     return (
         <>
