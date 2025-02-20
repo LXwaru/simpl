@@ -17,6 +17,34 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
     const [ loading, setLoading ] = useState(false)
     const [ total, setTotal ] = useState(0)
 
+    
+        const formattedDateTime = (dateTime) => {
+            const date = new Date(dateTime)
+    
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+            const dayOfWeek = daysOfWeek[date.getDay()];
+    
+            // in short date format
+            const month = (date.getMonth() + 1).toString().padStart(2, '0')
+            const day = date.getDate().toString().padStart(2, '0')
+            const year = date.getFullYear()
+    
+            let hours = date.getHours()
+            const minutes = date.getMinutes().toString().padStart(2, '0')
+            const ampm = hours >= 12 ? 'pm' : 'am'
+    
+            hours = hours % 12 || 12
+    
+            // for short date format
+            const formattedDate = `${month}/${day}/${year}`
+            const formattedTime = `${hours}:${minutes}${ampm}`
+            return `${dayOfWeek}, ${formattedDate} - ${formattedTime}`
+        }
+    
+        const getServiceName = (serviceId) => {
+            const service = services.find((service) => service.id === parseInt(serviceId, 10))
+            return service.title
+        }
 
     const getClientName = (clientId) => {
         const client = clients.find((client) => client.id === parseInt(clientId, 10))
@@ -31,34 +59,6 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
             rate.service_id === parseInt(serviceId, 10))
             return payRate ? payRate.rate_per_service : null
         }
-
-    const formattedDateTime = (dateTime) => {
-        const date = new Date(dateTime)
-
-        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-        const dayOfWeek = daysOfWeek[date.getDay()];
-
-        // in short date format
-        const month = (date.getMonth() + 1).toString().padStart(2, '0')
-        const day = date.getDate().toString().padStart(2, '0')
-        const year = date.getFullYear()
-
-        let hours = date.getHours()
-        const minutes = date.getMinutes().toString().padStart(2, '0')
-        const ampm = hours >= 12 ? 'pm' : 'am'
-
-        hours = hours % 12 || 12
-
-        // for short date format
-        const formattedDate = `${month}/${day}/${year}`
-        const formattedTime = `${hours}:${minutes}${ampm}`
-        return `${dayOfWeek}, ${formattedDate} - ${formattedTime}`
-    }
-
-    const getServiceName = (serviceId) => {
-        const service = services.find((service) => service.id === parseInt(serviceId, 10))
-        return service.title
-    }
 
     const filterAppointments = () => {
         if (!employee || !startDate || !endDate) {
@@ -82,7 +82,8 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
 
 
     const getTotal = async (appointments) => {
-        if (!appointments){
+        if (appointments.length === 0){
+            setTotal(0)
             return
         }
         let totalPay = 0
@@ -97,8 +98,8 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
                 let payRateResponseData = payRateResponse.data
                 let ratePerService = payRateResponseData.rate_per_service
                 totalPay += ratePerService
+                console.log(totalPay)
                 setTotal(totalPay)
-                
             } catch (error) {
                 console.error('could not calculate payroll', error)
             } finally {
@@ -126,7 +127,7 @@ const GenerateReport = ({ dateRange, employeeId, employees }) => {
         if (startDate && endDate && employee) {
             filterAppointments()
         }
-    }, [employee, startDate, endDate])
+    }, [employee, startDate, endDate, employeeId])
 
     if (loading) {
         return <div>loading...</div>
