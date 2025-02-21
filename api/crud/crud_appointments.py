@@ -12,18 +12,18 @@ def create_new_appointment(
         appointment: schemas.AppointmentIn,
         db: Session
 ):
-    credit = db.query(models.Credit).filter(
-        models.Credit.id == appointment.credit_id
-    ).one_or_none()
+    # credit = db.query(models.Credit).filter(
+    #     models.Credit.id == appointment.credit_id
+    # ).one_or_none()
     
     db_appointment = models.Appointment(
         client_id=appointment.client_id,
         employee_id=appointment.employee_id,
         service_id=appointment.service_id,
-        credit_id=appointment.credit_id,
+        # credit_id=appointment.credit_id,
         start_time=appointment.start_time,
         company_id=company_id,
-        credit=credit
+        # credit=credit
     )
     client = db.query(models.Client).filter(
         models.Client.id == appointment.client_id
@@ -151,6 +151,9 @@ def delete_appointment(
     if appointment is None: 
         return None
     
+    if appointment.credit is not None:
+        raise HTTPException(status_code=401, detail='appointment has a credit, delete the credit first')
+
     db.delete(appointment)
     db.commit()
     return {'detail': 'appointment successfully deleted'}
@@ -169,12 +172,40 @@ def apply_credit(
     
     if appointment is None: 
         return None
+    
     db_credit = db.query(models.Credit).filter(
         models.Appointment.company_id == company_id,
         models.Credit.id == credit_id).one_or_none()
     if db_credit is None:
         return None
     appointment.credit = db_credit
+    db_credit.is_attached = True
+    db.commit()
+    db.refresh(appointment)
+    return appointment
+
+def remove_credit(
+    company_id: int,
+    appointment_id: int,
+    credit_id: int,
+    db: Session
+):
+    appointment = db.query(models.Appointment).filter(
+        models.Appointment.company_id == company_id,
+        models.Appointment.id == appointment_id
+    ).one_or_none()
+
+    if appointment is None:
+        return None
+    
+    credit = appointment.credit
+
+    if credit is None:
+        return None
+    
+    credit.is_attached = False
+    appointment.credit = None
+
     db.commit()
     db.refresh(appointment)
     return appointment

@@ -67,7 +67,8 @@ const AppointmentDashboard = () => {
             const client = clients.find((client) => client.id === parseInt(clientId, 10))
             const credits = client.credits
             const filteredCredits = credits.filter((credit) => credit.service_id === parseInt(serviceId, 10))
-            const availableCredits = filteredCredits.filter((credit) => credit.is_redeemed === false)
+            const availableCredits = filteredCredits.filter(
+                (credit) => credit.is_redeemed === false)
             return (
                 <>
                     {!availableCredits.length? (
@@ -146,6 +147,7 @@ const AppointmentDashboard = () => {
     
 
     const cancelAppointment = async (appointmentId) => {
+        
         try{
             await axios.delete(`http://localhost:8000/api/${companyId}/appointment/${appointmentId}/`, {
                 withCredentials: true
@@ -158,6 +160,9 @@ const AppointmentDashboard = () => {
             dispatch(updateUser(updatedUser))
         } catch (error) {
             console.error('could not cancel appointment', error)
+            if (error.response.status === 401) {
+                alert('you must remove the credit from the appointment before cancelling')
+            }
         }
     }
 
@@ -183,6 +188,21 @@ const AppointmentDashboard = () => {
         }
     }
 
+
+    const removeCredit = async (appointmentId) => {
+        try {
+            await axios.put(`http://localhost:8000/api/${companyId}/remove_credit/${appointmentId}/${creditId}`, {
+                withCredentials: true
+            })
+            alert('credit removed from appointment')
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+            dispatch(updateUser(updatedUser))
+        } catch (error) {
+            console.error('could not remove credit', error)
+        }
+    }
 
     if (loading) {
         return <div><p>Loading...</p></div>
@@ -222,6 +242,7 @@ const AppointmentDashboard = () => {
                                     <button className='btn btn-primary' onClick={() => checkoutAppointment(appointment.id)}>
                                         checkout appointment
                                     </button>
+                                    <button className='btn btn-link' onClick={() => removeCredit(appointment.id)}>remove credit</button>
                                 </td>       
                             ) : (
                                 <td>{getCredits(appointment.client_id, appointment.service_id, appointment.id)}</td>
