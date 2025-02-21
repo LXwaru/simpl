@@ -4,6 +4,8 @@ import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from '../features/user/userSlice'
 import AppointmentDashboard from './appointments/appointmentDashboard'
+import AppointmentCalendar from './appointments/AppointmentCalendar'
+
 
 const Dashboard = () => {
     const user = useSelector((state) => state.user.value)
@@ -76,6 +78,7 @@ const Dashboard = () => {
                 <div>
                     <h3>{user.company.name}</h3>
                     <p>{user.company.description}</p>
+                    <AppointmentCalendar />
                     <AppointmentDashboard />
                 </div>
             ) : (

@@ -15,12 +15,19 @@ def create_new_appointment(
     # credit = db.query(models.Credit).filter(
     #     models.Credit.id == appointment.credit_id
     # ).one_or_none()
+    service = db.query(models.Service).filter(
+        models.Service.id == appointment.service_id
+    ).one_or_none()
+    if service is None:
+        raise HTTPException(status_code=404, detail='service not found')
+    duration = service.duration
     
     db_appointment = models.Appointment(
         client_id=appointment.client_id,
         employee_id=appointment.employee_id,
         service_id=appointment.service_id,
         # credit_id=appointment.credit_id,
+        end_time=appointment.start_time + duration,
         start_time=appointment.start_time,
         company_id=company_id,
         # credit=credit

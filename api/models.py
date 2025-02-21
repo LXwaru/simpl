@@ -145,6 +145,7 @@ class Appointment(Base):
     employee_id = Column(Integer, ForeignKey('employees.id'))
     service_id = Column(Integer, ForeignKey('services.id'))
     start_time = Column(DateTime, index=True)
+    end_time = Column(DateTime, index=True)
     is_confirmed = Column(Boolean, default=False)
     credit_id = Column(Integer, ForeignKey('credits.id'), nullable=True)
     is_complete = Column(Boolean, default=False)

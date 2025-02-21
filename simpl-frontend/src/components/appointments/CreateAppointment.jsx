@@ -8,6 +8,7 @@ import { updateUser } from '../../features/user/userSlice'
 
 
 
+
 const CreateAppointment = () => {
     const user = useSelector((state) => state.user.value)
     const companyId = user.company.id

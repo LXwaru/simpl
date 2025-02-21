@@ -52,6 +52,7 @@ class AppointmentOut(AppointmentIn):
     id: int
     company_id: int
     is_confirmed: bool
+    end_time: datetime
     credit: Optional[CreditOut] = None
     is_complete: bool
 
