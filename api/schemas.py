@@ -31,6 +31,7 @@ class CreditOut(CreditIn):
     service_title: str
     price: int
     is_redeemed: bool
+    is_attached: bool
     completed_on: Optional[datetime] = None
     sale_id: int
 

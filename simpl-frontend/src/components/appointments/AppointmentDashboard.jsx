@@ -67,8 +67,8 @@ const AppointmentDashboard = () => {
             const client = clients.find((client) => client.id === parseInt(clientId, 10))
             const credits = client.credits
             const filteredCredits = credits.filter((credit) => credit.service_id === parseInt(serviceId, 10))
-            const availableCredits = filteredCredits.filter(
-                (credit) => credit.is_redeemed === false)
+            const unredeemedCredits = filteredCredits.filter((credit) => credit.is_redeemed === false)
+            const availableCredits = unredeemedCredits.filter((credit) => credit.is_attached === false)
             return (
                 <>
                     {!availableCredits.length? (
