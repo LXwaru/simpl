@@ -111,7 +111,6 @@ class Credit(Base):
     is_attached = Column(Boolean, default=False)
     completed_on = Column(DateTime(timezone=True), nullable=True)
 
-    # appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=True)
     sale_id = Column(Integer, ForeignKey('sales.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
 
