@@ -108,10 +108,13 @@ class Credit(Base):
     price = Column(Integer, index=True)
     is_active = Column(Boolean, default=False)
     is_redeemed = Column(Boolean, default=False)
+    is_attached = Column(Boolean, default=False)
     completed_on = Column(DateTime(timezone=True), nullable=True)
+
     # appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=True)
     sale_id = Column(Integer, ForeignKey('sales.id'))
     client_id = Column(Integer, ForeignKey('clients.id'))
+
     sale = relationship('Sale', back_populates='credits')
     client = relationship('Client', back_populates='credits')
     service = relationship("Service", back_populates='credits')

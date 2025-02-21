@@ -112,6 +112,18 @@ def apply_credit(
     return appointment
 
 
+@router.put('/api/{company_id}/remove_credit/{appointment_id}/{credit_id}/', response_model=schemas.AppointmentOut)
+def remove_credit(
+    company_id: int,
+    appointment_id: int,
+    credit_id: int,
+    db: Session = Depends(utils_db.get_db),
+    access_token: str = Cookie(None)
+):
+    credit = crud_appointments.remove_credit(db=db, company_id=company_id, appointment_id=appointment_id, credit_id=credit_id)
+    return credit
+
+
 @router.put('/api/{company_id}/appointment_checkout/{appointment_id}/', response_model=schemas.AppointmentOut)
 def checkout_appointment(
     company_id: int,
