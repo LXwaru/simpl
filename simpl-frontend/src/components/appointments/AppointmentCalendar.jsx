@@ -15,16 +15,23 @@ const AppointmentCalendar = () => {
     const clients = user.company.clients
     const employees = user.company.employees    
     const localizer = momentLocalizer(moment)   
-    const events = appointments.map((appointment) => {
+    const navigate = useNavigate()
+    const event = appointments.map((appointment) => {
         const service = services.find((service) => service.id === appointment.service_id)
         const client = clients.find((client) => client.id === appointment.client_id)
         const employee = employees.find((employee) => employee.id === appointment.employee_id)
         return {
-            title: client.full_name + ' - (' + service.title + ' with ' + employee.full_name + ')',
+            title: client.full_name + ' - ' + service.title + ' with ' + employee.full_name,
             start: new Date(appointment.start_time),
             end: new Date(appointment.end_time),
+            id: appointment.id
         }
     })
+
+    const handleEventClick = (event) => {
+        console.log(event.id)
+        navigate(`/appointment-process/${event.id}`)
+    }
 
     return (
         <>
@@ -33,12 +40,13 @@ const AppointmentCalendar = () => {
                     <h3>appointments</h3>
                     <Calendar
                         localizer={localizer}
-                        events={events}
+                        events={event}
                         titleAccessor="title"
                         startAccessor="start"
                         endAccessor="end"
                         style={{ width: '100%', height: '500px' }}
                         defaultView='day'
+                        onSelectEvent={handleEventClick}
                     />
                 </div>
             ) : (

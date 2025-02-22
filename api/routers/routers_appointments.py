@@ -141,7 +141,21 @@ def checkout_appointment(
     return appointment
 
 
-    
+@router.put('/api/{company_id}/appointment_cancel/{appointment_id}/', response_model=schemas.AppointmentOut)
+def cancel_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session = Depends(utils_db.get_db),
+    access_token: str = Cookie(None)
+):
+    appointment = crud_appointments.cancel_appointment(
+        db=db,
+        company_id=company_id,
+        appointment_id=appointment_id
+    )
+    if appointment is None:
+        raise HTTPException(status_code=404, detail='appointment not found')
+    return appointment
 
 
 @router.delete('/api/{company_id}/appointment/{appointment_id}/')
