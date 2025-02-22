@@ -9,8 +9,9 @@ const AppointmentDashboard = () => {
     const user = useSelector((state) => state.user.value)
     const companyId = user.company.id
     const appointments = user.company.appointments
-    const uncompletedAppointments = appointments.filter((appointment) => appointment.is_complete === false)
-    const completedAppointments = appointments.filter((appointment) => appointment.is_complete === true)
+    const validAppointments = appointments.filter((appointment) => appointment.is_cancelled === false)
+    const uncompletedAppointments = validAppointments.filter((appointment) => appointment.is_complete === false)
+    const completedAppointments = validAppointments.filter((appointment) => appointment.is_complete === true)
     const [ creditId, setCreditId ] = useState(0)
     const [ loading, setLoading ] = useState(false)
     const dispatch = useDispatch()

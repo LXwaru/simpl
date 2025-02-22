@@ -218,4 +218,24 @@ def remove_credit(
     return appointment
 
 
-    
+def cancel_appointment(
+    company_id: int,
+    appointment_id: int,
+    db: Session
+):
+    appointment = db.query(models.Appointment).filter(
+        models.Appointment.company_id == company_id,
+        models.Appointment.id == appointment_id
+    ).one_or_none()
+    if appointment is None:
+        return None
+    appointment.is_cancelled = True
+    if appointment.credit is not None:
+        appointment.credit.is_attached = False
+        appointment.credit.is_redeemed = False
+        appointment.credit.completed_on = None
+        appointment.credit = None
+
+    db.commit()
+    db.refresh(appointment)
+    return appointment

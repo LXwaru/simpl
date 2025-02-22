@@ -149,6 +149,7 @@ class Appointment(Base):
     is_confirmed = Column(Boolean, default=False)
     credit_id = Column(Integer, ForeignKey('credits.id'), nullable=True)
     is_complete = Column(Boolean, default=False)
+    is_cancelled = Column(Boolean, default=False)
 
     company_id = Column(Integer, ForeignKey('companies.id'))
     credit = relationship('Credit', back_populates='appointment')

@@ -22,6 +22,16 @@ nav {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+table {
+  color: none;
+}
+
+tr.disabled {
+  --bs-table-color: rgb(163, 0, 0) !important;
+  font-style: italic;
+  cursor: not-allowed;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

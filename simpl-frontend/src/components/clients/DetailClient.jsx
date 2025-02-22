@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateUser } from '../../features/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
 
+
+
 const DetailClient = () => {
 
     const {id} = useParams()
@@ -117,26 +119,28 @@ const DetailClient = () => {
             
         return result.trim();
     }
-    const getConfirmationStatus = (isConfirmed) => {
-        if (isConfirmed) {
-            return 'confirmed'
-        } else {
-            return 'unconfirmed'
-        }
-    }
-    const getPaymentStatus = (isPaid) => {
-        if (isPaid) {
-            return 'paid'
-        } else {
-            return 'not paid'
-        }
-    }
     const isRedeemed = (isRedeemed) => {
         if (isRedeemed) {
             return 'redeemed'
         } else {
             return 'active'
         }
+    }
+
+    const cancelAppointment = async(id) => {
+        try {
+            axios.put(`http://localhost:8000/api/${company_id}/appointment_cancel/${id}/`, {
+                withCredentials: true
+            })
+            const { data: updatedUser } = await axios.get(`http://localhost:8000/users/me`, {
+                withCredentials: true
+            })
+            dispatch(updateUser(updatedUser))
+            
+        } catch (error) {
+            console.error('could not cancel appointment', error)
+        }
+        
     }
 
     return (
@@ -208,25 +212,46 @@ const DetailClient = () => {
                                         <tr>
                                             <td>service</td>
                                             <td>employee</td>
-                                            <td>past/upcoming</td>
                                             <td>date/time</td>
                                             <td>duration</td>
-                                            <td>confirmation status</td>
                                             <td>checked out status</td>
+                                            <td>force cancel appointment</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {appointments.map((appointment) => (
-                                        <tr key={appointment.id}>
-                                            <td>{getServiceName(appointment.service_id)}</td>
-                                            <td>{getEmployeeName(appointment.employee_id)}</td>
-                                            <td>{pastOrFuture(appointment.start_time)}</td>
-                                            <td>{formatDateTime(appointment.start_time)}</td>
-                                            <td>{formatDuration(appointment.service_id)}</td>
-                                            <td>{getConfirmationStatus(appointment.is_confirmed)}</td>
-                                            <td>{isCompleteStatus(appointment.is_complete)}</td>
-                                        </tr>
-                                        )).reverse()}
+                                            appointment.is_cancelled ? (
+                                                <tr key={appointment.id} className='disabled'>
+                                                    <td>{getServiceName(appointment.service_id)}</td>
+                                                    <td>{getEmployeeName(appointment.employee_id)}</td>
+                                                    <td>{formatDateTime(appointment.start_time)}</td>
+                                                    <td>{formatDuration(appointment.service_id)}</td>
+                                                    <td>{isCompleteStatus(appointment.is_complete)}</td>
+                                                    <td>appointment cancelled</td>
+                                                </tr>
+                                            ) : (
+                                            appointment.is_complete ? (
+                                            <tr key={appointment.id}>                               
+                                                <td>{getServiceName(appointment.service_id)}</td>
+                                                <td>{getEmployeeName(appointment.employee_id)}</td>
+                                                <td>{formatDateTime(appointment.start_time)}</td>
+                                                <td>{formatDuration(appointment.service_id)}</td>
+                                                <td>{isCompleteStatus(appointment.is_complete)}</td>
+                                                <td>
+                                                    <button className='btn btn-danger' onClick={() => cancelAppointment(appointment.id)}>cancel appointment</button>
+                                                </td>
+                                            </tr>
+                                            ) : (
+                                            <tr key={appointment.id}>
+                                                <td>{getServiceName(appointment.service_id)}</td>
+                                                <td>{getEmployeeName(appointment.employee_id)}</td>
+                                                <td>{formatDateTime(appointment.start_time)}</td>
+                                                <td>{formatDuration(appointment.service_id)}</td>
+                                                <td>{isCompleteStatus(appointment.is_complete)}</td>
+                                                <td>n/a</td>
+                                            </tr>
+                                            )
+                                        ))).reverse()}
                                     </tbody>
                                 </table>                           
                             </div>

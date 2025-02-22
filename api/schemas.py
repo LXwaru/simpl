@@ -55,6 +55,7 @@ class AppointmentOut(AppointmentIn):
     end_time: datetime
     credit: Optional[CreditOut] = None
     is_complete: bool
+    is_cancelled: bool
 
     class Config:
         from_attributes=True

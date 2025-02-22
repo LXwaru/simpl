@@ -19,6 +19,7 @@ import CreateSale from './components/sales/CreateSale'
 import SearchAppointments from './components/appointments/SearchAppointments'
 import ListServices from './components/services/ListServices'
 import CreateAppointment from './components/appointments/CreateAppointment'
+import AppointmentProcess from './components/appointments/AppointmentProcess'
 import CreateService from './components/services/CreateService'
 import DetailService from './components/services/DetailService'
 import EditService from './components/services/EditService'
@@ -56,6 +57,7 @@ const App = () => {
           <Route path='/list-services' element={<ListServices />} /> 
           <Route path='/create-company/:id' element={<CreateCompany />} />
           <Route path='/create-appointment' element={<CreateAppointment />} />
+          <Route path='/appointment-process/:id' element={<AppointmentProcess />} />
           <Route path='/create-service' element={<CreateService />} />
           <Route path='/detail-service/:id' element={<DetailService />} />
           <Route path='/edit-service/:id' element={<EditService />} />
