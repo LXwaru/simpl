@@ -36,17 +36,6 @@ const CreateAppointment = () => {
     }
 
 
-    const findConflicts = (clientId, employeeId, serviceId, date) => {
-        const selectedService = services.find(service => service.id === parseInt(serviceId, 10))
-        const serviceDuration = selectedService.duration
-        const serviceStartTime = selectedService.start_time
-        const employeeConflict = appointments.filter(appointment => {
-            appointment.employee_id === employeeId &&
-            appointment.start_time < serviceDuration &&
-            appointment.start_time > serviceDuration
-        })
-    }
-
     useEffect(() => {
         const fetchCredits = () => {
             if (!clientId && !serviceId) {
@@ -83,6 +72,9 @@ const CreateAppointment = () => {
             await axios.post(`http://localhost:8000/api/${companyId}/appointments/`, payload, {
                 withCredentials: true
             })
+            if (Response.status === 400) {
+                throw new Error('appointment conflicts with existing appointments')
+            }
             alert('appointment created successfully')
             navigate('/dashboard')
         
@@ -93,6 +85,7 @@ const CreateAppointment = () => {
 
             dispatch(updateUser(updatedUser))
         } catch (error) {
+            alert('could not make reservation: ' + error.response.data.detail)
             console.error('could not make reservation', error)
         }
     }

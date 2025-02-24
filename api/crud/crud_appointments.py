@@ -7,14 +7,28 @@ from datetime import datetime, timezone
 from .. import models, schemas
 
 
+def check_appointment_conflicts(
+    appointment: schemas.AppointmentOut,
+    db: Session
+):
+    conflict_list = db.query(models.Appointment).filter(
+        models.Appointment.client_id == appointment.client_id,
+        models.Appointment.employee_id == appointment.employee_id,
+        models.Appointment.start_time < appointment.end_time,  # Existing starts before new ends
+        models.Appointment.end_time > appointment.start_time   # Existing ends after new starts
+    ).all()
+
+
+    conflicts = len(conflict_list) > 0
+
+    return conflicts
+
+
 def create_new_appointment(
         company_id: int,
         appointment: schemas.AppointmentIn,
         db: Session
 ):
-    # credit = db.query(models.Credit).filter(
-    #     models.Credit.id == appointment.credit_id
-    # ).one_or_none()
     service = db.query(models.Service).filter(
         models.Service.id == appointment.service_id
     ).one_or_none()
@@ -26,11 +40,9 @@ def create_new_appointment(
         client_id=appointment.client_id,
         employee_id=appointment.employee_id,
         service_id=appointment.service_id,
-        # credit_id=appointment.credit_id,
         end_time=appointment.start_time + duration,
         start_time=appointment.start_time,
         company_id=company_id,
-        # credit=credit
     )
     client = db.query(models.Client).filter(
         models.Client.id == appointment.client_id
@@ -38,6 +50,10 @@ def create_new_appointment(
     if client is None:
         raise HTTPException(status_code=404, detail='client not found')
 
+    # check for conflicts
+    conflicts = check_appointment_conflicts(db_appointment, db)
+    if conflicts:
+        raise HTTPException(status_code=400, detail='appointment conflicts with existing appointments')
 
     db.add(db_appointment)
     db.commit()
