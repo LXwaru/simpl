@@ -5,6 +5,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { updateUser } from '../../features/user/userSlice'
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+
 
 
 
@@ -15,6 +19,7 @@ const CreateAppointment = () => {
     const employees = user.company.employees
     const services = user.company.services
     const clients = user.company.clients
+    const localizer = momentLocalizer(moment)  
     const appointments = user.company.appointments
     const [ employeeId, setEmployeeId ] = useState('')
     const [ serviceId, setServiceId ] = useState('')
@@ -28,6 +33,17 @@ const CreateAppointment = () => {
     const handleCreditChange = (e) => setCreditId(e.target.value)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const event = appointments.map((appointment) => {
+        const service = services.find((service) => service.id === appointment.service_id)
+        const client = clients.find((client) => client.id === appointment.client_id)
+        const employee = employees.find((employee) => employee.id === appointment.employee_id)
+        return {
+            title: client.full_name + ' - ' + service.title + ' with ' + employee.full_name,
+            start: new Date(appointment.start_time),
+            end: new Date(appointment.end_time),
+            id: appointment.id
+        }
+    })
     
     const formatDate = (rawDate) => {
         const localDate = new Date(rawDate)
@@ -142,6 +158,26 @@ const CreateAppointment = () => {
                     /> <br />
                     <button className='btn btn-success'>submit</button>
                 </form>
+                <br />
+                <hr />
+            {appointments.length > 0 ? (
+                <div>
+                    <h3>schedule: <i>read-only</i></h3>
+                    <Calendar
+                        localizer={localizer}
+                        events={event}
+                        titleAccessor="title"
+                        startAccessor="start"
+                        endAccessor="end"
+                        style={{ width: '100%', height: '500px' }}
+                        defaultView='month'
+                        />
+                </div>
+            ) : (
+                <div>
+                    <h3>the calendar is empty</h3>
+                </div>
+            )}
             </div>
         </>
     )
